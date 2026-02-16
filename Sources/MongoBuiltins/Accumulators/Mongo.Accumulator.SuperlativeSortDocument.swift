@@ -1,4 +1,5 @@
 import BSON
+import MongoABI
 
 extension Mongo.Accumulator
 {
