@@ -42,7 +42,7 @@ extension MongoExecutor
     public
     func close() async
     {
-        await Self.close(self.channel)
+        try? await self.channel.close(mode: .all)
     }
 }
 extension MongoExecutor
@@ -96,11 +96,5 @@ extension MongoExecutor
                 underlying: error,
                 provenance: .crosscancellation)),
             promise: nil)
-    }
-
-    @usableFromInline internal static
-    func close(_ channel:any Channel) async
-    {
-        try? await channel.close(mode: .all)
     }
 }
