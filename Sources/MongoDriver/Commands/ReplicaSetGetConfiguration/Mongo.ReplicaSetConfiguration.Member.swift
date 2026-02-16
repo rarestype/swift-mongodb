@@ -4,10 +4,6 @@ import MongoClusters
 import OrderedCollections
 import UnixTime
 
-extension OrderedDictionary:@unchecked Sendable where Key:Sendable, Value:Sendable
-{
-}
-
 extension Mongo.ReplicaSetConfiguration
 {
     public
