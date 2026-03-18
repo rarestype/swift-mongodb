@@ -11,26 +11,26 @@ jobs:
         runs-on: ubuntu-24.04
         name: Linux
         steps:
-            -   name: Checkout repository
-                uses: actions/checkout@v3
+            -   name: 💖 Checkout repository 💖
+                uses: actions/checkout@v6
 
-            -   name: Set up mock deployments
+            -   name: 💖 Set up mock deployments 💖
                 run: |
                     docker compose -f .github/mongonet/docker-compose.yml up -d
 
-            -   name: Initialize replica set
+            -   name: 💖 Initialize replica set 💖
                 run: |
                     timeout 60s bash -c \
                     'until docker exec -t mongonet-mongo-0-1 /bin/mongosh --file /create-replica-set.js; do sleep 1; done'
 
-            -   name: Run pipeline
+            -   name: 💖 Run pipeline 💖
                 run: |
                     docker run -t --rm --network=mongonet \
                         --name mongonet-environment \
                         --user root \
                         -v $PWD:/swift-mongodb \
                         -w /swift-mongodb \
-                        swift:6.0.3-noble \
+                        swift:6.2.4-noble \
                         /bin/bash Scripts/TestAll
 
     macos:
@@ -38,10 +38,10 @@ jobs:
         name: macOS
 
         steps:
-            -   name: Checkout repository
-                uses: actions/checkout@v3
+            -   name: 💖 Checkout repository 💖
+                uses: actions/checkout@v6
 
-            -   name: Build debug
+            -   name: 💖 Build debug 💖
                 run: |
                     swift --version
                     swift build
