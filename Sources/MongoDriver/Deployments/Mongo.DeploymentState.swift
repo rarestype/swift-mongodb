@@ -1,4 +1,4 @@
-import Atomics
+import Synchronization
 
 extension Mongo {
     enum DeploymentState: Sendable {
@@ -14,8 +14,7 @@ extension Mongo.DeploymentState {
         }
     }
 }
-extension Mongo.DeploymentState: AtomicValue {
-}
+extension Mongo.DeploymentState: AtomicRepresentable {}
 extension Mongo.DeploymentState: RawRepresentable {
     init(rawValue: UInt64) {
         if  let capabilities: Mongo.DeploymentCapabilities = .init(bitPattern: rawValue) {

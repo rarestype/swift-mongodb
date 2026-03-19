@@ -1,7 +1,6 @@
-import Atomics
 import MongoClusters
+import Synchronization
 import UnixTime
-import UnixTime_Atomics
 
 extension Mongo {
     /// A thread-safe reference type that maintains connections to a particular
@@ -35,9 +34,9 @@ extension Mongo {
         private var allocations: Allocations
         /// The number of connections that this pool knows have been released,
         /// but has not been able to re-index yet.
-        private nonisolated let releasing: UnsafeAtomic<Int>
+        private nonisolated let releasing: Atomic<Int>
 
-        private nonisolated let networkLatency: UnsafeAtomic<Nanoseconds>
+        private nonisolated let networkLatency: Atomic<Nanoseconds>
         private nonisolated let networkTimeout: NetworkTimeout
 
         /// Avoid setting the maximum pool size to a very large number, because
@@ -68,14 +67,12 @@ extension Mongo {
                 )
             )
 
-            self.releasing = .create(0)
-            self.networkLatency = .create(initialLatency)
+            self.releasing = .init(0)
+            self.networkLatency = .init(initialLatency)
             self.networkTimeout = connectorTimeout
         }
         deinit {
-            self.networkLatency.destroy()
             self.allocations.destroy()
-            self.releasing.destroy()
         }
     }
 }
@@ -229,7 +226,7 @@ extension Mongo.ConnectionPool {
     /// which may take place before the wrapping connection is destroyed.
     nonisolated func destroy(_ allocation: Allocation, reuse: Bool) {
         if  reuse {
-            self.releasing.wrappingIncrement(ordering: .relaxed)
+            self.releasing.add(1, ordering: .relaxed)
         }
         let _: Task<Void, Never> = .init {
             await self.destroy(allocation, reindex: reuse)
@@ -237,7 +234,7 @@ extension Mongo.ConnectionPool {
     }
     private func destroy(_ allocation: Allocation, reindex: Bool) async {
         if  reindex {
-            self.releasing.wrappingDecrement(ordering: .relaxed)
+            self.releasing.subtract(1, ordering: .relaxed)
         }
 
         switch self.allocations.phase {

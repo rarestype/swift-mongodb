@@ -1,8 +1,8 @@
-import Atomics
 import DequeModule
 import MongoClusters
 import MongoCommands
 import MongoLogging
+import Synchronization
 import UnixTime
 
 extension Mongo {
@@ -22,7 +22,7 @@ extension Mongo {
         /// Session deinitializers increment this counter, and the pool
         /// decrements it once the session has been re-indexed and made available
         /// for reuse.
-        private nonisolated let releasing: UnsafeAtomic<Int>
+        private nonisolated let releasing: Atomic<Int>
 
         private var retained: Set<SessionIdentifier>
         private var released: Deque<Allocation>
@@ -37,7 +37,7 @@ extension Mongo {
 
         init(deployment: Deployment) {
             self.deployment = deployment
-            self.releasing = .create(0)
+            self.releasing = .init(0)
             self.released = []
             self.retained = []
             self.requests = []
@@ -46,8 +46,6 @@ extension Mongo {
         }
 
         deinit {
-            self.releasing.destroy()
-
             guard self.requests.isEmpty else {
                 fatalError(
                     "unreachable (deinitialized session pool while continuations are awaiting!)"
@@ -239,7 +237,7 @@ extension Mongo.SessionPool {
     /// pool if `reuse` is true, otherwise it will be discarded.
     nonisolated func destroy(_ allocation: Allocation, reuse: Bool) {
         if  reuse {
-            self.releasing.wrappingIncrement(ordering: .relaxed)
+            self.releasing.add(1, ordering: .relaxed)
         }
         let _: Task<Void, Never> = .init {
             await self.destroy(allocation, reindex: reuse)
@@ -247,7 +245,7 @@ extension Mongo.SessionPool {
     }
     private func destroy(_ allocation: Allocation, reindex: Bool) {
         if  reindex {
-            self.releasing.wrappingDecrement(ordering: .relaxed)
+            self.releasing.subtract(1, ordering: .relaxed)
         }
         switch self.phase {
         case .filling:
