@@ -1,14 +1,10 @@
 import MongoClusters
 
-extension Mongo
-{
+extension Mongo {
     /// A way to discover members of a MongoDB deployment.
-    public
-    protocol DiscoveryMode
-    {
+    public protocol DiscoveryMode {
         associatedtype Seedlist = Mongo.Seedlist
 
-        static
-        subscript(seedlist:Self.Seedlist) -> SeedingMethod { get }
+        static subscript(seedlist: Self.Seedlist) -> SeedingMethod { get }
     }
 }

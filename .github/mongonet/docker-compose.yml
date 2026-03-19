@@ -137,6 +137,6 @@ services:
                     cpus: '1.00'
                     memory: 500M
 
-networks: 
+networks:
     mongonet:
         name: mongonet

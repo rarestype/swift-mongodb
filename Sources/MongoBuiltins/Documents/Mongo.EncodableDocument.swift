@@ -1,54 +1,41 @@
 import BSON
 
-extension Mongo
-{
+extension Mongo {
     /// An `EncodableDocument` is nothing more than a type that supports an `init(with:)`
     /// builder API.
     ///
     /// The specific encoding API vended and encodability protocol used is up to the conforming
     /// type.
-    public
-    protocol EncodableDocument:BSONRepresentable<BSON.Document>, BSONDecodable, BSONEncodable
-    {
+    public protocol EncodableDocument: BSONRepresentable<BSON.Document>,
+        BSONDecodable,
+        BSONEncodable {
         associatedtype Encoder = Self
     }
 }
-extension Mongo.EncodableDocument
-{
-    @inlinable public
-    init()
-    {
+extension Mongo.EncodableDocument {
+    @inlinable public init() {
         self.init(.init())
     }
 }
 //  Legacy API
-extension Mongo.EncodableDocument where Encoder == Self
-{
-    @inlinable public
-    init(with populate:(inout Self) throws -> ()) rethrows
-    {
+extension Mongo.EncodableDocument where Encoder == Self {
+    @inlinable public init(with populate: (inout Self) throws -> ()) rethrows {
         self.init()
         try populate(&self)
     }
 }
-extension Mongo.EncodableDocument where Encoder:BSON.Encoder
-{
+extension Mongo.EncodableDocument where Encoder: BSON.Encoder {
     /// Creates an empty instance of this type, and initializes it with the
     /// given closure.
-    @inlinable public
-    init(with populate:(inout Encoder) throws -> ()) rethrows
-    {
-        var bson:BSON.Document = .init()
+    @inlinable public init(with populate: (inout Encoder) throws -> ()) rethrows {
+        var bson: BSON.Document = .init()
         try populate(&bson.output[as: Encoder.self])
         self.init(bson)
     }
 }
 extension Mongo.EncodableDocument
-    where Self:ExpressibleByDictionaryLiteral, Key == Never, Value == Never
-{
-    @inlinable public
-    init(dictionaryLiteral:(Never, Never)...)
-    {
+    where Self: ExpressibleByDictionaryLiteral, Key == Never, Value == Never {
+    @inlinable public init(dictionaryLiteral: (Never, Never)...) {
         //  Weirdly, if we try to call `Self.init`, this will call itself instead...
         self.init(.init())
     }

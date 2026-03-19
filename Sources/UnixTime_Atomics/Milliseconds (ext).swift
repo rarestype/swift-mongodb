@@ -2,11 +2,9 @@ import Atomics
 import UnixTime
 
 #if compiler(>=6.0)
-extension Milliseconds:@retroactive AtomicValue
-{
+extension Milliseconds: @retroactive AtomicValue {
 }
 #else
-extension Milliseconds:AtomicValue
-{
+extension Milliseconds: AtomicValue {
 }
 #endif

@@ -1,25 +1,18 @@
 import BSON
 
-extension Mongo
-{
-    public
-    struct CreateIndexesResponse:Equatable, Sendable
-    {
-        public
-        let createdCollectionAutomatically:Bool?
-        public
-        let indexesBefore:Int
-        public
-        let indexesAfter:Int
-        public
-        let note:String?
+extension Mongo {
+    public struct CreateIndexesResponse: Equatable, Sendable {
+        public let createdCollectionAutomatically: Bool?
+        public let indexesBefore: Int
+        public let indexesAfter: Int
+        public let note: String?
 
-        public
-        init(createdCollectionAutomatically:Bool?,
-            indexesBefore:Int,
-            indexesAfter:Int,
-            note:String? = nil)
-        {
+        public init(
+            createdCollectionAutomatically: Bool?,
+            indexesBefore: Int,
+            indexesAfter: Int,
+            note: String? = nil
+        ) {
             self.createdCollectionAutomatically = createdCollectionAutomatically
             self.indexesBefore = indexesBefore
             self.indexesAfter = indexesAfter
@@ -27,16 +20,15 @@ extension Mongo
         }
     }
 }
-extension Mongo.CreateIndexesResponse:BSONDocumentDecodable
-{
-    @inlinable public
-    init(bson:BSON.DocumentDecoder<BSON.Key>) throws
-    {
+extension Mongo.CreateIndexesResponse: BSONDocumentDecodable {
+    @inlinable public init(bson: BSON.DocumentDecoder<BSON.Key>) throws {
         self.init(
-            createdCollectionAutomatically:
-                try bson["createdCollectionAutomatically"]?.decode(),
+            createdCollectionAutomatically: try bson[
+                "createdCollectionAutomatically"
+            ]?.decode(),
             indexesBefore: try bson["numIndexesBefore"].decode(),
             indexesAfter: try bson["numIndexesAfter"].decode(),
-            note: try bson["note"]?.decode())
+            note: try bson["note"]?.decode()
+        )
     }
 }

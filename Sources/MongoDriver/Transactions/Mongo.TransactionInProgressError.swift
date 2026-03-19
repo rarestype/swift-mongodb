@@ -1,11 +1,6 @@
-extension Mongo
-{
-    public
-    struct TransactionInProgressError:Error, Equatable, Sendable
-    {
-        public
-        init()
-        {
+extension Mongo {
+    public struct TransactionInProgressError: Error, Equatable, Sendable {
+        public init() {
         }
     }
 }

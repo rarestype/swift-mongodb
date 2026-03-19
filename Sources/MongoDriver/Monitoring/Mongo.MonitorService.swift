@@ -1,8 +1,5 @@
-extension Mongo
-{
-    @frozen public
-    enum MonitorService:Sendable
-    {
+extension Mongo {
+    @frozen public enum MonitorService: Sendable {
         /// The sampler.
         case sampler
         /// The listener.
@@ -13,13 +10,9 @@ extension Mongo
         case pool
     }
 }
-extension Mongo.MonitorService:CustomStringConvertible
-{
-    public
-    var description:String
-    {
-        switch self
-        {
+extension Mongo.MonitorService: CustomStringConvertible {
+    public var description: String {
+        switch self {
         case .listener: "monitor.listener"
         case .pool:     "monitor.pool"
         case .sampler:  "monitor.sampler"

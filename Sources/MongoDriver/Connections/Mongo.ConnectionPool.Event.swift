@@ -1,34 +1,26 @@
 import MongoLogging
 
-extension Mongo.ConnectionPool
-{
-    @frozen public
-    enum Event:Sendable
-    {
+extension Mongo.ConnectionPool {
+    @frozen public enum Event: Sendable {
         case creating(Mongo.ConnectionPoolSettings)
-        case draining(because:any Error)
+        case draining(because: any Error)
         case drained
 
-        case expanding(id:UInt)
-        case expanded(id:UInt)
-        case perished(id:UInt, because:Result<Void, any Error>)
-        case removed(id:UInt)
+        case expanding(id: UInt)
+        case expanded(id: UInt)
+        case perished(id: UInt, because: Result<Void, any Error>)
+        case removed(id: UInt)
 
         case creatingConnection
         case createdConnection
         case destroyedConnection
     }
 }
-extension Mongo.ConnectionPool.Event:Mongo.MonitorEventType
-{
-    @inlinable public static
-    var component:Mongo.MonitorService { .pool }
+extension Mongo.ConnectionPool.Event: Mongo.MonitorEventType {
+    @inlinable public static var component: Mongo.MonitorService { .pool }
 
-    @inlinable public
-    var severity:Mongo.LogSeverity
-    {
-        switch self
-        {
+    @inlinable public var severity: Mongo.LogSeverity {
+        switch self {
         case .creating:                         .debug
         case .draining:                         .error
         case .drained:                          .debug
@@ -43,13 +35,9 @@ extension Mongo.ConnectionPool.Event:Mongo.MonitorEventType
         }
     }
 }
-extension Mongo.ConnectionPool.Event:CustomStringConvertible
-{
-    public
-    var description:String
-    {
-        switch self
-        {
+extension Mongo.ConnectionPool.Event: CustomStringConvertible {
+    public var description: String {
+        switch self {
         case .creating(let settings):
             "creating (\(settings))"
 

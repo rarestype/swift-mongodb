@@ -1,8 +1,5 @@
-extension Mongo.Accumulator
-{
-    @frozen public
-    enum Unary:String, Hashable, Sendable
-    {
+extension Mongo.Accumulator {
+    @frozen public enum Unary: String, Hashable, Sendable {
         case addToSet           = "$addToSet"
         case avg                = "$avg"
         case mergeObjects       = "$mergeObjects"

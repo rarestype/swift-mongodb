@@ -1,8 +1,5 @@
-extension Mongo.MergeDocument
-{
-    @frozen public
-    enum WhenMatched:String, Hashable, Sendable
-    {
+extension Mongo.MergeDocument {
+    @frozen public enum WhenMatched: String, Hashable, Sendable {
         case whenMatched
     }
 }

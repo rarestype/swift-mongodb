@@ -1,10 +1,7 @@
 import BSON
 
-extension Mongo
-{
-    @frozen public
-    enum PreferredNumbers:String, Hashable, Sendable
-    {
+extension Mongo {
+    @frozen public enum PreferredNumbers: String, Hashable, Sendable {
         case e6 = "E6"
         case e12 = "E12"
         case e24 = "E24"
@@ -23,6 +20,5 @@ extension Mongo
         case r80 = "R80"
     }
 }
-extension Mongo.PreferredNumbers:BSONDecodable, BSONEncodable
-{
+extension Mongo.PreferredNumbers: BSONDecodable, BSONEncodable {
 }

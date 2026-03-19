@@ -1,8 +1,5 @@
-extension Mongo
-{
-    public
-    protocol LogTarget:Sendable
-    {
-        func log(event:some LogEvent)
+extension Mongo {
+    public protocol LogTarget: Sendable {
+        func log(event: some LogEvent)
     }
 }

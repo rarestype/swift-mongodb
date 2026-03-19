@@ -1,34 +1,24 @@
 import BSON
 import NIOCore
 
-extension Mongo
-{
-    struct WireMessageEncoder
-    {
-        var buffer:ByteBuffer
+extension Mongo {
+    struct WireMessageEncoder {
+        var buffer: ByteBuffer
 
-        init(buffer:ByteBuffer)
-        {
+        init(buffer: ByteBuffer) {
             self.buffer = buffer
         }
     }
 }
-extension Mongo.WireMessageEncoder:BSON.OutputStream
-{
-    mutating
-    func reserve(another bytes:Int)
-    {
+extension Mongo.WireMessageEncoder: BSON.OutputStream {
+    mutating func reserve(another bytes: Int) {
         self.buffer.reserveCapacity(minimumWritableBytes: bytes)
     }
 
-    mutating
-    func append(_ byte:UInt8)
-    {
+    mutating func append(_ byte: UInt8) {
         self.buffer.writeInteger(byte)
     }
-    mutating
-    func append(_ bytes:some Sequence<UInt8>)
-    {
+    mutating func append(_ bytes: some Sequence<UInt8>) {
         self.buffer.writeBytes(bytes)
     }
 }

@@ -1,3 +1,2 @@
-extension Mongo.Create:Mongo.ImplicitSessionCommand, Mongo.TransactableCommand
-{
+extension Mongo.Create: Mongo.ImplicitSessionCommand, Mongo.TransactableCommand {
 }

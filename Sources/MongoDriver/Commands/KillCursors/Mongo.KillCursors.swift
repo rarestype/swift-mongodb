@@ -2,42 +2,28 @@ import BSON
 import MongoABI
 import MongoCommands
 
-extension Mongo
-{
-    @frozen public
-    struct KillCursors:Sendable
-    {
-        public
-        let collection:Collection
-        public
-        let cursors:[CursorIdentifier]
+extension Mongo {
+    @frozen public struct KillCursors: Sendable {
+        public let collection: Collection
+        public let cursors: [CursorIdentifier]
 
-        @inlinable public
-        init(_ collection:Collection, cursors:[CursorIdentifier])
-        {
+        @inlinable public init(_ collection: Collection, cursors: [CursorIdentifier]) {
             self.collection = collection
             self.cursors = cursors
         }
     }
 }
-extension Mongo.KillCursors:Mongo.Command
-{
+extension Mongo.KillCursors: Mongo.Command {
     /// The string `"killCursors"`.
-    @inlinable public static
-    var type:Mongo.CommandType { .killCursors }
+    @inlinable public static var type: Mongo.CommandType { .killCursors }
 
-    public
-    typealias Response = Mongo.KillCursorsResponse
+    public typealias Response = Mongo.KillCursorsResponse
 
-    public
-    var fields:BSON.Document
-    {
-        Self.type(self.collection)
-        {
+    public var fields: BSON.Document {
+        Self.type(self.collection) {
             $0["cursors"] = self.cursors
         }
     }
 }
-extension Mongo.KillCursors:Mongo.TransactableCommand
-{
+extension Mongo.KillCursors: Mongo.TransactableCommand {
 }

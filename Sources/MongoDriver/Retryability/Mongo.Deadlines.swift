@@ -1,8 +1,5 @@
-extension Mongo
-{
-    @frozen public
-    struct Deadlines:Sendable
-    {
+extension Mongo {
+    @frozen public struct Deadlines: Sendable {
         /// A time limit for how long the driver will wait to obtain a
         /// connection to a suitable server.
         ///
@@ -23,16 +20,15 @@ extension Mongo
         /// A long delay in performing any of the above procedures usually
         /// indicates the deployment is not in a healthy state, so it is often
         /// useful to enforce a separate time limit for this.
-        public
-        let connection:ContinuousClock.Instant
+        public let connection: ContinuousClock.Instant
         /// A time limit for how long the driver will wait for a reply from
         /// a selected server.
-        public
-        let operation:ContinuousClock.Instant
+        public let operation: ContinuousClock.Instant
 
-        @inlinable public
-        init(connection:ContinuousClock.Instant, operation:ContinuousClock.Instant)
-        {
+        @inlinable public init(
+            connection: ContinuousClock.Instant,
+            operation: ContinuousClock.Instant
+        ) {
             self.connection = connection
             self.operation = operation
         }

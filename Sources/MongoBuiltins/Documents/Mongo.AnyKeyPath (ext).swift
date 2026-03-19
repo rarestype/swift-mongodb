@@ -1,5 +1,4 @@
 import MongoABI
 
-extension Mongo.AnyKeyPath:_MongoExpressionRestrictedEncodable
-{
+extension Mongo.AnyKeyPath: _MongoExpressionRestrictedEncodable {
 }

@@ -1,45 +1,30 @@
 import BSON
 
-extension Mongo
-{
-    @frozen public
-    struct SwitchDocument:Mongo.EncodableDocument, Sendable
-    {
-        public
-        var bson:BSON.Document
+extension Mongo {
+    @frozen public struct SwitchDocument: Mongo.EncodableDocument, Sendable {
+        public var bson: BSON.Document
 
-        @inlinable public
-        init(_ bson:BSON.Document)
-        {
+        @inlinable public init(_ bson: BSON.Document) {
             self.bson = bson
         }
     }
 }
-extension Mongo.SwitchDocument
-{
-    @inlinable public
-    subscript(key:Branches) -> Mongo.SwitchBranches?
-    {
-        get
-        {
+extension Mongo.SwitchDocument {
+    @inlinable public subscript(key: Branches) -> Mongo.SwitchBranches? {
+        get {
             nil
         }
-        set(value)
-        {
+        set(value) {
             value?.encode(to: &self.bson[with: key])
         }
     }
 
-    @inlinable public
-    subscript<Encodable>(key:Default) -> Encodable?
-        where Encodable:BSONEncodable
-    {
-        get
-        {
+    @inlinable public subscript<Encodable>(key: Default) -> Encodable?
+        where Encodable: BSONEncodable {
+        get {
             nil
         }
-        set(value)
-        {
+        set(value) {
             value?.encode(to: &self.bson[with: key])
         }
     }

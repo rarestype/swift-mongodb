@@ -1,37 +1,24 @@
 import BSON
 
-extension Mongo.WriteConcern
-{
-    public
-    enum Acknowledgement:Hashable, Sendable
-    {
+extension Mongo.WriteConcern {
+    public enum Acknowledgement: Hashable, Sendable {
         case mode(String)
         case votes(Int)
     }
 }
-extension Mongo.WriteConcern.Acknowledgement
-{
+extension Mongo.WriteConcern.Acknowledgement {
     /// Same as ``votes(_:)``, but traps if the argument is zero or negative.
-    @inlinable internal static
-    func acknowledged(by votes:Int) -> Self
-    {
-        if 0 < votes
-        {
+    @inlinable internal static func acknowledged(by votes: Int) -> Self {
+        if 0 < votes {
             .votes(votes)
-        }
-        else
-        {
+        } else {
             fatalError("Cannot use acknowledged(by:) to specify unacknowledged write concern.")
         }
     }
 }
-extension Mongo.WriteConcern.Acknowledgement:BSONEncodable
-{
-    public
-    func encode(to field:inout BSON.FieldEncoder)
-    {
-        switch self
-        {
+extension Mongo.WriteConcern.Acknowledgement: BSONEncodable {
+    public func encode(to field: inout BSON.FieldEncoder) {
+        switch self {
         case .mode(let mode):
             mode.encode(to: &field)
 
@@ -40,22 +27,14 @@ extension Mongo.WriteConcern.Acknowledgement:BSONEncodable
         }
     }
 }
-extension Mongo.WriteConcern.Acknowledgement:BSONDecodable
-{
-    @inlinable public
-    init(bson:BSON.AnyValue) throws
-    {
-        if  case .string(let string) = bson
-        {
+extension Mongo.WriteConcern.Acknowledgement: BSONDecodable {
+    @inlinable public init(bson: BSON.AnyValue) throws {
+        if  case .string(let string) = bson {
             self = .mode(string.description)
-        }
-        else if
-            let votes:Int = try bson.as(Int.self)
-        {
+        } else if
+            let votes: Int = try bson.as(Int.self) {
             self = .votes(votes)
-        }
-        else
-        {
+        } else {
             throw BSON.TypecastError<Self>.init(invalid: bson.type)
         }
     }

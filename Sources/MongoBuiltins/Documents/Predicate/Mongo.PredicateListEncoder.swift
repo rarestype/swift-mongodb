@@ -1,46 +1,34 @@
 import BSON
 
-extension Mongo
-{
-    @frozen public
-    struct PredicateListEncoder
-    {
-        @usableFromInline internal
-        var list:BSON.ListEncoder
+extension Mongo {
+    @frozen public struct PredicateListEncoder {
+        @usableFromInline internal var list: BSON.ListEncoder
 
-        @inlinable internal
-        init(list:BSON.ListEncoder)
-        {
+        @inlinable internal init(list: BSON.ListEncoder) {
             self.list = list
         }
     }
 }
-extension Mongo.PredicateListEncoder:BSON.Encoder
-{
-    @inlinable public
-    init(_ output:consuming BSON.Output)
-    {
+extension Mongo.PredicateListEncoder: BSON.Encoder {
+    @inlinable public init(_ output: consuming BSON.Output) {
         self.init(list: .init(output))
     }
 
-    @inlinable public consuming
-    func move() -> BSON.Output { self.list.move() }
+    @inlinable public consuming func move() -> BSON.Output { self.list.move() }
 
-    @inlinable public static
-    var frame:BSON.DocumentFrame { .list }
+    @inlinable public static var frame: BSON.DocumentFrame { .list }
 }
-extension Mongo.PredicateListEncoder
-{
-    @inlinable public
-    subscript<Encodable>(_:(BSON.EndIndex) -> Void) -> Encodable? where Encodable:BSONEncodable
-    {
+extension Mongo.PredicateListEncoder {
+    @inlinable public subscript<Encodable>(
+        _: (BSON.EndIndex) -> Void
+    ) -> Encodable? where Encodable: BSONEncodable {
         get { nil }
         set (value) { self.list[+] = value }
     }
 
-    @inlinable public mutating
-    func callAsFunction(with encode:(inout Mongo.PredicateEncoder) -> ())
-    {
+    @inlinable public mutating func callAsFunction(
+        with encode: (inout Mongo.PredicateEncoder) -> ()
+    ) {
         encode(&self.list[+][as: Mongo.PredicateEncoder.self])
     }
 }

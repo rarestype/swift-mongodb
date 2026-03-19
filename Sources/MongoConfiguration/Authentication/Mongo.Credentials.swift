@@ -1,25 +1,18 @@
 import MongoABI
 
-extension Mongo
-{
-    @frozen public
-    struct Credentials:Equatable, Sendable
-    {
-        public
-        let authentication:Authentication?
-        public
-        let username:String
-        public
-        let password:String
-        public
-        let database:Database
+extension Mongo {
+    @frozen public struct Credentials: Equatable, Sendable {
+        public let authentication: Authentication?
+        public let username: String
+        public let password: String
+        public let database: Database
 
-        @inlinable public
-        init(authentication:Authentication?,
-            username:String,
-            password:String,
-            database:Database)
-        {
+        @inlinable public init(
+            authentication: Authentication?,
+            username: String,
+            password: String,
+            database: Database
+        ) {
             self.authentication = authentication
             self.username = username
             self.password = password
@@ -27,11 +20,8 @@ extension Mongo
         }
     }
 }
-extension Mongo.Credentials
-{
-    @inlinable public
-    var user:Mongo.Namespaced<String>
-    {
+extension Mongo.Credentials {
+    @inlinable public var user: Mongo.Namespaced<String> {
         self.database | self.username
     }
 }

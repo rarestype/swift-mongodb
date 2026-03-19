@@ -1,160 +1,159 @@
 import MongoClusters
 import Testing
 
-@Suite
-struct ReplicaSets
-{
-    final
-    class Canary:Sendable
-    {
+@Suite struct ReplicaSets {
+    final class Canary: Sendable {
         init() {}
     }
 
-    private
-    var localhost:Mongo.Host { .init(name: "localhost") }
-    private
-    var secondary:Mongo.Host { .init(name: "secondary") }
-    private
-    var primary:Mongo.Host { .init(name: "primary") }
-    private
-    var setName:String { "example-rs" }
+    private var localhost: Mongo.Host { .init(name: "localhost") }
+    private var secondary: Mongo.Host { .init(name: "secondary") }
+    private var primary: Mongo.Host { .init(name: "primary") }
+    private var setName: String { "example-rs" }
 
     /// Mocked peerlist.
-    private
-    var peerlist:Mongo.Peerlist
-    {
-        .init(set: self.setName,
+    private var peerlist: Mongo.Peerlist {
+        .init(
+            set: self.setName,
             primary: self.primary,
             arbiters: [],
             passives: [],
             hosts: [self.primary, self.secondary],
-            me: self.primary)
+            me: self.primary
+        )
     }
 
     /// Mocked replica metadata.
-    private
-    var filler:Mongo.Replica
-    {
-        .init(capabilities: .init(
+    private var filler: Mongo.Replica {
+        .init(
+            capabilities: .init(
                 logicalSessionTimeoutMinutes: 1,
                 maxWriteBatchCount: 1,
                 maxDocumentSize: 1,
-                maxMessageSize: 1),
+                maxMessageSize: 1
+            ),
             timings: .init(write: .zero),
-            tags: [:])
+            tags: [:]
+        )
     }
 
-    @Test
-    func PrimaryRenameWithoutHint() throws
-    {
-        var topology:Mongo.Topology<Canary> = .init(from: [self.localhost], hint: nil)
-        let update:Mongo.TopologyUpdateResult = topology.combine(
-            update: .primary(.init(replica: filler, term: .init(
-                    election: .init(0, 0, 0),
-                    version: 1)),
-                peerlist),
+    @Test func PrimaryRenameWithoutHint() throws {
+        var topology: Mongo.Topology<Canary> = .init(from: [self.localhost], hint: nil)
+        let update: Mongo.TopologyUpdateResult = topology.combine(
+            update: .primary(
+                .init(
+                    replica: filler, term: .init(
+                        election: .init(0, 0, 0),
+                        version: 1
+                    )
+                ),
+                peerlist
+            ),
             owner: Canary.init(),
-            host: self.localhost)
-        {
+            host: self.localhost
+        ) {
             _ in
         }
 
         #expect(update == .rejected)
 
         guard
-        case .replicated(let replicated) = topology
-        else
-        {
+        case .replicated(let replicated) = topology else {
             Issue.record()
             return
         }
         guard
-        case .queued? = replicated[self.primary]
-        else
-        {
+        case .queued? = replicated[self.primary] else {
             Issue.record()
             return
         }
     }
 
-    @Test
-    func PrimaryRenameWithHint() throws
-    {
-        var topology:Mongo.Topology<Canary> = .init(from: [self.localhost],
-            hint: .replicated(set: self.setName))
+    @Test func PrimaryRenameWithHint() throws {
+        var topology: Mongo.Topology<Canary> = .init(
+            from: [self.localhost],
+            hint: .replicated(set: self.setName)
+        )
 
-        let update:Mongo.TopologyUpdateResult = topology.combine(
-            update: .primary(.init(replica: filler, term: .init(
-                    election: .init(0, 0, 0),
-                    version: 1)),
-                peerlist),
+        let update: Mongo.TopologyUpdateResult = topology.combine(
+            update: .primary(
+                .init(
+                    replica: filler, term: .init(
+                        election: .init(0, 0, 0),
+                        version: 1
+                    )
+                ),
+                peerlist
+            ),
             owner: Canary.init(),
-            host: self.localhost)
-        {
+            host: self.localhost
+        ) {
             _ in
         }
 
         #expect(update == .rejected)
 
         guard
-        case .replicated(let replicated) = topology
-        else
-        {
+        case .replicated(let replicated) = topology else {
             Issue.record()
             return
         }
         guard
-        case .queued? = replicated[self.primary]
-        else
-        {
+        case .queued? = replicated[self.primary] else {
             Issue.record()
             return
         }
     }
 
-    @Test
-    func GHOSTED() throws
-    {
-        var topology:Mongo.Topology<Canary> = .init(from: [self.primary],
-            hint: .replicated(set: self.setName))
+    @Test func GHOSTED() throws {
+        var topology: Mongo.Topology<Canary> = .init(
+            from: [self.primary],
+            hint: .replicated(set: self.setName)
+        )
 
-        let update:Mongo.TopologyUpdateResult = topology.combine(
-            update: .primary(.init(replica: filler, term: .init(
-                    election: .init(0, 0, 0),
-                    version: 2)),
-                peerlist),
+        let update: Mongo.TopologyUpdateResult = topology.combine(
+            update: .primary(
+                .init(
+                    replica: filler, term: .init(
+                        election: .init(0, 0, 0),
+                        version: 2
+                    )
+                ),
+                peerlist
+            ),
             owner: Canary.init(),
-            host: self.primary)
-        {
+            host: self.primary
+        ) {
             _ in
         }
 
         #expect(update == .accepted)
 
-        let ghosted:Mongo.TopologyUpdateResult = topology.combine(
-            update: .primary(.init(replica: filler, term: .init(
-                    election: .init(0, 0, 0),
-                    version: 1)),
-                peerlist),
+        let ghosted: Mongo.TopologyUpdateResult = topology.combine(
+            update: .primary(
+                .init(
+                    replica: filler, term: .init(
+                        election: .init(0, 0, 0),
+                        version: 1
+                    )
+                ),
+                peerlist
+            ),
             owner: Canary.init(),
-            host: self.primary)
-        {
+            host: self.primary
+        ) {
             _ in
         }
 
         #expect(ghosted == .accepted)
 
         guard
-        case .replicated(let replicated) = topology
-        else
-        {
+        case .replicated(let replicated) = topology else {
             Issue.record()
             return
         }
         guard
-        case .ghost? = replicated[self.primary]?.metadata
-        else
-        {
+        case .ghost? = replicated[self.primary]?.metadata else {
             Issue.record()
             return
         }

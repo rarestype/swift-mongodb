@@ -1,8 +1,5 @@
-extension Mongo
-{
-    public
-    protocol LogEvent:Sendable
-    {
-        var severity:LogSeverity { get }
+extension Mongo {
+    public protocol LogEvent: Sendable {
+        var severity: LogSeverity { get }
     }
 }

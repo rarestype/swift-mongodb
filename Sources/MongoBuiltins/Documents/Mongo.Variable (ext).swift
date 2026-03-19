@@ -1,5 +1,4 @@
 import MongoABI
 
-extension Mongo.Variable:_MongoExpressionRestrictedEncodable
-{
+extension Mongo.Variable: _MongoExpressionRestrictedEncodable {
 }

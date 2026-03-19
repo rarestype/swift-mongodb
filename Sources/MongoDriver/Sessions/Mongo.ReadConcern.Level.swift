@@ -1,22 +1,15 @@
 import BSON
 import MongoCommands
 
-extension Mongo.ReadConcern
-{
-    @frozen public
-    enum Level:Sendable, Equatable
-    {
+extension Mongo.ReadConcern {
+    @frozen public enum Level: Sendable, Equatable {
         case ratification(Mongo.ReadConcern)
         case snapshot
     }
 }
-extension Mongo.ReadConcern.Level:CustomStringConvertible
-{
-    @inlinable public
-    var description:String
-    {
-        switch self
-        {
+extension Mongo.ReadConcern.Level: CustomStringConvertible {
+    @inlinable public var description: String {
+        switch self {
         case .snapshot:
             "snapshot"
         case .ratification(let level):
@@ -24,11 +17,8 @@ extension Mongo.ReadConcern.Level:CustomStringConvertible
         }
     }
 }
-extension Mongo.ReadConcern.Level:BSONEncodable
-{
-    public
-    func encode(to field:inout BSON.FieldEncoder)
-    {
+extension Mongo.ReadConcern.Level: BSONEncodable {
+    public func encode(to field: inout BSON.FieldEncoder) {
         self.description.encode(to: &field)
     }
 }

@@ -2,26 +2,22 @@ import BSON
 import MongoDB
 import Testing
 
-@Suite
-struct Transactions:Mongo.TestBattery
-{
-    let database:Mongo.Database = "Transactions"
+@Suite struct Transactions: Mongo.TestBattery {
+    let database: Mongo.Database = "Transactions"
 
     //  Transactions only work with replica sets.
     @Test(arguments: [.replicated] as [any Mongo.TestConfiguration])
-    func transactions(_ configuration:any Mongo.TestConfiguration) async throws
-    {
+    func transactions(_ configuration: any Mongo.TestConfiguration) async throws {
         try await self.run(under: configuration)
     }
 
-    func run(with pool:Mongo.SessionPool) async throws
-    {
-        let bystander:Mongo.Session = try await .init(from: pool)
-        let session:Mongo.Session = try await .init(from: pool)
+    func run(with pool: Mongo.SessionPool) async throws {
+        let bystander: Mongo.Session = try await .init(from: pool)
+        let session: Mongo.Session = try await .init(from: pool)
 
-        let collection:Mongo.Collection = "letters"
-        let a:Letter = "a"
-        let b:Letter = "b"
+        let collection: Mongo.Collection = "letters"
+        let a: Letter = "a"
+        let b: Letter = "b"
 
         //  We should be able to observe that no transaction is currently in
         //  progress.
@@ -30,18 +26,17 @@ struct Transactions:Mongo.TestBattery
         //  zero.
         #expect(session.transaction.number == 0)
 
-        do
-        {
+        do {
             //  We should be able to abort an empty transaction by throwing an error.
-            let result:Mongo.TransactionResult<Void> = await session.withSnapshotTransaction(
-                writeConcern: .majority)
-            {
-                (_:Mongo.Transaction) in throw CancellationError.init()
+            let result: Mongo.TransactionResult<Void> = await session.withSnapshotTransaction(
+                writeConcern: .majority
+            ) {
+                (_: Mongo.Transaction) in
+                throw CancellationError.init()
             }
             //  We should be able to observe the transaction API return a 'cancelled'
             //  transaction result.
-            switch result
-            {
+            switch result {
             case .abortion(_, .cancelled):  break
             case _:                         Issue.record()
             }
@@ -59,36 +54,37 @@ struct Transactions:Mongo.TestBattery
         //  has a precondition time.
         try await session.refresh()
 
-        do
-        {
+        do {
             //  We should be able to abort a non-empty transaction by throwing an error.
-            let result:Mongo.TransactionResult<Void> = await session.withSnapshotTransaction(
-                writeConcern: .majority)
-            {
-                (transaction:Mongo.Transaction) in
+            let result: Mongo.TransactionResult<Void> = await session.withSnapshotTransaction(
+                writeConcern: .majority
+            ) {
+                (transaction: Mongo.Transaction) in
                 //  We should be able to observe a precondition time associated with
                 //  this transaction, because we have used its underlying session
                 //  before.
                 #expect(transaction.preconditionTime != nil)
                 //  We should be able to start a transaction with a write command,
                 //  even though it also has a non-nil precondition time.
-                do
-                {
-                    let response:Mongo.InsertResponse = try await transaction.run(
+                do {
+                    let response: Mongo.InsertResponse = try await transaction.run(
                         command: Mongo.Insert.init(collection, encoding: [a]),
-                        against: self.database)
+                        against: self.database
+                    )
 
                     #expect(response == .init(inserted: 1))
                 }
                 //  We should be able to observe unaborted writes from the
                 //  transaction itself while the transaction is ongoing, because
                 //  its underlying session is causally-consistent.
-                do
-                {
-                    let letters:[Letter] = try await transaction.run(
-                        command: Mongo.Find<Mongo.SingleBatch<Letter>>.init(collection,
-                            limit: 10),
-                        against: self.database)
+                do {
+                    let letters: [Letter] = try await transaction.run(
+                        command: Mongo.Find<Mongo.SingleBatch<Letter>>.init(
+                            collection,
+                            limit: 10
+                        ),
+                        against: self.database
+                    )
 
                     #expect(letters == [a])
                 }
@@ -96,13 +92,15 @@ struct Transactions:Mongo.TestBattery
                 bystander.synchronize(with: session)
                 //  We should not be able to observe unaborted writes from other
                 //  sessions while the transaction is ongoing.
-                do
-                {
-                    let letters:[Letter] = try await bystander.run(
-                        command: Mongo.Find<Mongo.SingleBatch<Letter>>.init(collection,
-                            limit: 10),
+                do {
+                    let letters: [Letter] = try await bystander.run(
+                        command: Mongo.Find<Mongo.SingleBatch<Letter>>.init(
+                            collection,
+                            limit: 10
+                        ),
                         against: self.database,
-                        on: .primary)
+                        on: .primary
+                    )
 
                     #expect(letters == [])
                 }
@@ -111,8 +109,7 @@ struct Transactions:Mongo.TestBattery
             }
             //  We should be able to observe the transaction API return a 'aborted'
             //  transaction result.
-            switch result
-            {
+            switch result {
             case .abortion(_, .aborted):    break
             case _:                         Issue.record()
             }
@@ -125,30 +122,30 @@ struct Transactions:Mongo.TestBattery
 
             //  We should be able to verify that collection has been rolled back
             //  to its previous state.
-            do
-            {
-                let letters:[Letter] = try await session.run(
-                    command: Mongo.Find<Mongo.SingleBatch<Letter>>.init(collection,
-                        limit: 10),
+            do {
+                let letters: [Letter] = try await session.run(
+                    command: Mongo.Find<Mongo.SingleBatch<Letter>>.init(
+                        collection,
+                        limit: 10
+                    ),
                     against: self.database,
-                    on: .primary)
+                    on: .primary
+                )
 
                 #expect(letters == [])
             }
         }
-        do
-        {
+        do {
             //  We should be able to commit an empty transaction, by returning from
             //  the closure argument.
-            let result:Mongo.TransactionResult<Void> = await session.withSnapshotTransaction(
-                writeConcern: .majority)
-            {
-                (_:Mongo.Transaction) in
+            let result: Mongo.TransactionResult<Void> = await session.withSnapshotTransaction(
+                writeConcern: .majority
+            ) {
+                (_: Mongo.Transaction) in
             }
             //  We should be able to observe the transaction API return a 'cancelled'
             //  transaction result.
-            switch result
-            {
+            switch result {
             case .commit(_, .cancelled):    break
             case _:                         Issue.record()
             }
@@ -157,31 +154,32 @@ struct Transactions:Mongo.TestBattery
             //  stayed the same, because the transaction was empty.
             #expect(session.transaction.number == 1)
         }
-        do
-        {
+        do {
             //  We should be able to commit a non-empty transaction, by returning from
             //  the closure argument.
-            let result:Mongo.TransactionResult<Void> = await session.withSnapshotTransaction(
-                writeConcern: .majority)
-            {
-                (transaction:Mongo.Transaction) in
+            let result: Mongo.TransactionResult<Void> = await session.withSnapshotTransaction(
+                writeConcern: .majority
+            ) {
+                (transaction: Mongo.Transaction) in
 
-                do
-                {
-                    let response:Mongo.InsertResponse = try await transaction.run(
+                do {
+                    let response: Mongo.InsertResponse = try await transaction.run(
                         command: Mongo.Insert.init(collection, encoding: [b]),
-                        against: self.database)
+                        against: self.database
+                    )
 
                     #expect(response == .init(inserted: 1))
                 }
                 //  We should be able to observe uncommitted writes from the
                 //  transaction itself while the transaction is ongoing.
-                do
-                {
-                    let letters:[Letter] = try await transaction.run(
-                        command: Mongo.Find<Mongo.SingleBatch<Letter>>.init(collection,
-                            limit: 10),
-                        against: self.database)
+                do {
+                    let letters: [Letter] = try await transaction.run(
+                        command: Mongo.Find<Mongo.SingleBatch<Letter>>.init(
+                            collection,
+                            limit: 10
+                        ),
+                        against: self.database
+                    )
 
                     #expect(letters == [b])
                 }
@@ -189,21 +187,22 @@ struct Transactions:Mongo.TestBattery
                 bystander.synchronize(with: session)
                 //  We should not be able to observe uncommitted writes from other
                 //  sessions while the transaction is ongoing.
-                do
-                {
-                    let letters:[Letter] = try await bystander.run(
-                        command: Mongo.Find<Mongo.SingleBatch<Letter>>.init(collection,
-                            limit: 10),
+                do {
+                    let letters: [Letter] = try await bystander.run(
+                        command: Mongo.Find<Mongo.SingleBatch<Letter>>.init(
+                            collection,
+                            limit: 10
+                        ),
                         against: self.database,
-                        on: .primary)
+                        on: .primary
+                    )
 
                     #expect(letters == [])
                 }
             }
             //  We should be able to observe the transaction API return a 'committed'
             //  transaction result.
-            switch result
-            {
+            switch result {
             case .commit(_, .committed):    break
             case _:                         Issue.record()
             }
@@ -221,23 +220,23 @@ struct Transactions:Mongo.TestBattery
             //  should be durable, because we used a majority write concern, and
             //  and we should be able to observe them because we are using a
             //  causally-consistent session.
-            do
-            {
-                let letters:[Letter] = try await session.run(
+            do {
+                let letters: [Letter] = try await session.run(
                     command: Mongo.Find<Mongo.SingleBatch<Letter>>.init(collection, limit: 10),
                     against: self.database,
-                    on: .primary)
+                    on: .primary
+                )
 
                 #expect(letters == [b])
             }
             //  We should also be able to observe the committed writes from the
             //  bystander session.
-            do
-            {
-                let letters:[Letter] = try await bystander.run(
+            do {
+                let letters: [Letter] = try await bystander.run(
                     command: Mongo.Find<Mongo.SingleBatch<Letter>>.init(collection, limit: 10),
                     against: self.database,
-                    on: .primary)
+                    on: .primary
+                )
 
                 #expect(letters == [b])
             }

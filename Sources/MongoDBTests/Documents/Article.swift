@@ -1,23 +1,23 @@
 import BSON
 import MongoQL
 
-struct Article:Equatable, Hashable,
+struct Article: Equatable, Hashable,
     BSONDocumentDecodable,
     BSONDocumentEncodable,
-    Mongo.MasterCodingModel
-{
-    let id:BSON.Identifier
-    let author:String
-    let title:String
-    let views:Int
-    let tags:[String]
+    Mongo.MasterCodingModel {
+    let id: BSON.Identifier
+    let author: String
+    let title: String
+    let views: Int
+    let tags: [String]
 
-    init(id:BSON.Identifier,
-        author:String,
-        title:String,
-        views:Int,
-        tags:[String])
-    {
+    init(
+        id: BSON.Identifier,
+        author: String,
+        title: String,
+        views: Int,
+        tags: [String]
+    ) {
         self.id = id
         self.author = author
         self.title = title
@@ -25,8 +25,7 @@ struct Article:Equatable, Hashable,
         self.tags = tags
     }
 
-    enum CodingKey:String, Sendable
-    {
+    enum CodingKey: String, Sendable {
         case id = "_id"
         case author
         case title
@@ -34,17 +33,17 @@ struct Article:Equatable, Hashable,
         case tags
     }
 
-    init(bson:BSON.DocumentDecoder<CodingKey>) throws
-    {
-        self.init(id: try bson[.id].decode(),
+    init(bson: BSON.DocumentDecoder<CodingKey>) throws {
+        self.init(
+            id: try bson[.id].decode(),
             author: try bson[.author].decode(),
             title: try bson[.title].decode(),
             views: try bson[.views].decode(),
-            tags: try bson[.tags].decode())
+            tags: try bson[.tags].decode()
+        )
     }
 
-    func encode(to bson:inout BSON.DocumentEncoder<CodingKey>)
-    {
+    func encode(to bson: inout BSON.DocumentEncoder<CodingKey>) {
         bson[.id] = self.id
         bson[.author] = self.author
         bson[.title] = self.title

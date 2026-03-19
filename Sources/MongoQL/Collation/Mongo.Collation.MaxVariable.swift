@@ -1,10 +1,7 @@
 import BSON
 
-extension Mongo.Collation
-{
-    @frozen public
-    enum MaxVariable:String, Sendable
-    {
+extension Mongo.Collation {
+    @frozen public enum MaxVariable: String, Sendable {
         /// Both whitespace and punctuation are ignorable and not considered
         /// base characters.
         case punct
@@ -12,6 +9,5 @@ extension Mongo.Collation
         case space
     }
 }
-extension Mongo.Collation.MaxVariable:BSONDecodable, BSONEncodable
-{
+extension Mongo.Collation.MaxVariable: BSONDecodable, BSONEncodable {
 }

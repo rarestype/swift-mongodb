@@ -1,7 +1,4 @@
-extension Mongo
-{
-    @frozen public
-    enum Retry
-    {
+extension Mongo {
+    @frozen public enum Retry {
     }
 }

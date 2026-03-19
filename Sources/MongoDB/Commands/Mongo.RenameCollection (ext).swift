@@ -1,3 +1,2 @@
-extension Mongo.RenameCollection:Mongo.ImplicitSessionCommand
-{
+extension Mongo.RenameCollection: Mongo.ImplicitSessionCommand {
 }

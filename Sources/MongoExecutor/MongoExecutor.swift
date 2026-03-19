@@ -2,13 +2,10 @@ import MongoIO
 import MongoWire
 import NIOCore
 
-public
-protocol MongoExecutor
-{
-    var channel:any Channel { get }
+public protocol MongoExecutor {
+    var channel: any Channel { get }
 }
-extension MongoExecutor
-{
+extension MongoExecutor {
     /// Sends the given command document over this connection, unchanged, and awaits its
     /// message-response.
     ///
@@ -21,38 +18,35 @@ extension MongoExecutor
     /// ``channel`` and throw a ``Mongo.WireTimeoutError``. This function does not check if the
     /// deadline has already passed before sending the request; it is the responsibility of the
     /// caller to check if the deadline is sensible.
-    public
-    func request(
-        sections:__owned Mongo.WireMessage.Sections,
-        deadline:ContinuousClock.Instant) async throws -> Mongo.WireMessage
-    {
+    public func request(
+        sections: __owned Mongo.WireMessage.Sections,
+        deadline: ContinuousClock.Instant
+    ) async throws -> Mongo.WireMessage {
         try await Self.request(self.channel, sections: sections, deadline: deadline)
     }
 
     /// Interrupts this channel, forcing it to close (asynchronously), but
     /// returning without waiting for the channel to complete its shutdown
     /// procedure.
-    public
-    func crosscancel(throwing error:any Error)
-    {
+    public func crosscancel(throwing error: any Error) {
         Self.crosscancel(self.channel, throwing: error)
     }
 
     /// Closes this channel, returning when the channel has been closed.
-    public
-    func close() async
-    {
+    public func close() async {
         try? await self.channel.close(mode: .all)
     }
 }
-extension MongoExecutor
-{
-    private static
-    func timeout(_ channel:any Channel, by deadline:ContinuousClock.Instant) async throws
-    {
+extension MongoExecutor {
+    private static func timeout(
+        _ channel: any Channel,
+        by deadline: ContinuousClock.Instant
+    ) async throws {
         try await Task.sleep(until: deadline, clock: .continuous)
-        channel.writeAndFlush(Mongo.WireAction.cancel(throwing: Mongo.WireTimeoutError.init()),
-            promise: nil)
+        channel.writeAndFlush(
+            Mongo.WireAction.cancel(throwing: Mongo.WireTimeoutError.init()),
+            promise: nil
+        )
     }
     /// Sends the given command document over this connection, unchanged, and awaits its
     /// message-response.
@@ -60,41 +54,43 @@ extension MongoExecutor
     /// If the deadline passes without a reply from the server, the channel will be closed. This
     /// will happen even if the deadline has already passed; therefore it is the responsibility
     /// of the calling code to check if the deadline is sensible.
-    private static
-    func request(_ channel:any Channel,
-        sections:__owned Mongo.WireMessage.Sections,
-        deadline:ContinuousClock.Instant) async throws -> Mongo.WireMessage
-    {
-        async
-        let _:Void = Self.timeout(channel, by: deadline)
+    private static func request(
+        _ channel: any Channel,
+        sections: __owned Mongo.WireMessage.Sections,
+        deadline: ContinuousClock.Instant
+    ) async throws -> Mongo.WireMessage {
+        async let _: Void = Self.timeout(channel, by: deadline)
 
-        return try await withTaskCancellationHandler
-        {
-            let promise:EventLoopPromise<Mongo.WireMessage> = channel.eventLoop.makePromise()
+        return try await withTaskCancellationHandler {
+            let promise: EventLoopPromise<Mongo.WireMessage> = channel.eventLoop.makePromise()
 
-            channel.writeAndFlush(Mongo.WireAction.request(sections, promise)).whenFailure
-            {
+            channel.writeAndFlush(Mongo.WireAction.request(sections, promise)).whenFailure {
                 // don’t leak the promise!
                 promise.fail(Mongo.NetworkError.init(underlying: $0))
             }
 
             return try await promise.futureResult.get()
-        }
-        onCancel:
-        {
-            channel.writeAndFlush(Mongo.WireAction.cancel(throwing: CancellationError.init()),
-                promise: nil)
+        } onCancel: {
+            channel.writeAndFlush(
+                Mongo.WireAction.cancel(throwing: CancellationError.init()),
+                promise: nil
+            )
         }
     }
 }
-extension MongoExecutor
-{
-    @usableFromInline internal static
-    func crosscancel(_ channel:any Channel, throwing error:any Error)
-    {
-        channel.writeAndFlush(Mongo.WireAction.cancel(throwing: Mongo.NetworkError.init(
-                underlying: error,
-                provenance: .crosscancellation)),
-            promise: nil)
+extension MongoExecutor {
+    @usableFromInline internal static func crosscancel(
+        _ channel: any Channel,
+        throwing error: any Error
+    ) {
+        channel.writeAndFlush(
+            Mongo.WireAction.cancel(
+                throwing: Mongo.NetworkError.init(
+                    underlying: error,
+                    provenance: .crosscancellation
+                )
+            ),
+            promise: nil
+        )
     }
 }

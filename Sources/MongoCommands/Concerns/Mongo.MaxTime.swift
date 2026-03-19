@@ -1,8 +1,5 @@
-extension Mongo
-{
-    @frozen public
-    enum MaxTime:Equatable, Hashable, Sendable
-    {
+extension Mongo {
+    @frozen public enum MaxTime: Equatable, Hashable, Sendable {
         /// The driver will compute and populate the relevant command’s `maxTimeMS` field
         /// automatically, based on user-specified timeout arguments.
         case computed

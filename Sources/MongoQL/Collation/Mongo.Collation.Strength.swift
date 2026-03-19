@@ -1,10 +1,7 @@
 import BSON
 
-extension Mongo.Collation
-{
-    @frozen public
-    enum Strength:Int32, Sendable
-    {
+extension Mongo.Collation {
+    @frozen public enum Strength: Int32, Sendable {
         /// Primary level of comparison. Collation performs comparisons of the base
         /// characters only, ignoring other differences such as diacritics and case.
         case primary = 1
@@ -34,6 +31,5 @@ extension Mongo.Collation
         case identical = 5
     }
 }
-extension Mongo.Collation.Strength:BSONDecodable, BSONEncodable
-{
+extension Mongo.Collation.Strength: BSONDecodable, BSONEncodable {
 }

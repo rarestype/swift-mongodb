@@ -1,10 +1,7 @@
 import BSON
 
-extension Mongo.Collation
-{
-    @frozen public
-    enum Alternate:String, Sendable
-    {
+extension Mongo.Collation {
+    @frozen public enum Alternate: String, Sendable {
         /// Whitespace and punctuation are considered base characters.
         ///
         /// This is called [`non-ignorable`] (with a hyphen) in the server’s
@@ -15,6 +12,5 @@ extension Mongo.Collation
         case shifted
     }
 }
-extension Mongo.Collation.Alternate:BSONDecodable, BSONEncodable
-{
+extension Mongo.Collation.Alternate: BSONDecodable, BSONEncodable {
 }

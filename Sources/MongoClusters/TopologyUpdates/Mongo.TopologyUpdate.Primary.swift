@@ -1,27 +1,18 @@
-extension Mongo.TopologyUpdate
-{
+extension Mongo.TopologyUpdate {
     /// An update about about a replica set member that believes it
     /// is the primary.
-    public
-    struct Primary:Sendable
-    {
-        private
-        let replica:Mongo.Replica
-        private
-        let term:Mongo.ReplicaSetTerm
+    public struct Primary: Sendable {
+        private let replica: Mongo.Replica
+        private let term: Mongo.ReplicaSetTerm
 
-        public
-        init(replica:Mongo.Replica, term:Mongo.ReplicaSetTerm)
-        {
+        public init(replica: Mongo.Replica, term: Mongo.ReplicaSetTerm) {
             self.replica = replica
             self.term = term
         }
     }
 }
-extension Mongo.TopologyUpdate.Primary
-{
-    var metadata:Mongo.ReplicaSetMember
-    {
+extension Mongo.TopologyUpdate.Primary {
+    var metadata: Mongo.ReplicaSetMember {
         .primary(self.replica)
     }
 
@@ -30,14 +21,10 @@ extension Mongo.TopologyUpdate.Primary
     /// A nil term always compares older than any update;
     /// therefore the parameter will always be non-nil after
     /// calling this function.
-    func newer(than term:inout Mongo.ReplicaSetTerm?) -> Bool
-    {
-        if  let term:Mongo.ReplicaSetTerm, self.term < term
-        {
+    func newer(than term: inout Mongo.ReplicaSetTerm?) -> Bool {
+        if  let term: Mongo.ReplicaSetTerm, self.term < term {
             return false
-        }
-        else
-        {
+        } else {
             term = self.term
             return true
         }

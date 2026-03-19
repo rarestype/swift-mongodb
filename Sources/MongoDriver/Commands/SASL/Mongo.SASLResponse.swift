@@ -1,32 +1,23 @@
 import BSON
 import SCRAM
 
-extension Mongo
-{
-    struct SASLResponse:Sendable
-    {
-        private
-        let conversation:Int32
-        let message:SCRAM.Message
-        let done:Bool
+extension Mongo {
+    struct SASLResponse: Sendable {
+        private let conversation: Int32
+        let message: SCRAM.Message
+        let done: Bool
     }
 }
-extension Mongo.SASLResponse
-{
-    func command(message:SCRAM.Message) -> Mongo.SASLContinue
-    {
+extension Mongo.SASLResponse {
+    func command(message: SCRAM.Message) -> Mongo.SASLContinue {
         .init(conversation: self.conversation, message: message)
     }
 }
-extension Mongo.SASLResponse:BSONDocumentDecodable
-{
-    init(bson:BSON.DocumentDecoder<BSON.Key>) throws
-    {
+extension Mongo.SASLResponse: BSONDocumentDecodable {
+    init(bson: BSON.DocumentDecoder<BSON.Key>) throws {
         self.conversation = try bson["conversationId"].decode(to: Int32.self)
-        self.message = try bson["payload"].decode
-        {
-            switch $0
-            {
+        self.message = try bson["payload"].decode {
+            switch $0 {
             case .string(let utf8):
                 return .init(base64: utf8.bytes)
             case .binary(let binary):

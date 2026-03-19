@@ -1,3 +1,2 @@
-extension Mongo.Fsync:Mongo.ImplicitSessionCommand
-{
+extension Mongo.Fsync: Mongo.ImplicitSessionCommand {
 }

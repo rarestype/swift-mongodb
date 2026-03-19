@@ -1,7 +1,4 @@
-extension Mongo
-{
-    public
-    protocol PipelineEncodable:PipelineStreamable
-    {
+extension Mongo {
+    public protocol PipelineEncodable: PipelineStreamable {
     }
 }

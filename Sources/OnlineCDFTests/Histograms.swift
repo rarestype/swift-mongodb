@@ -5,13 +5,9 @@
 import OnlineCDF
 import Testing
 
-@Suite
-struct Histograms
-{
-    @Test
-    static func InsertOne()
-    {
-        let histogram:OnlineCDF = .init(resolution: 100, seed: 2)
+@Suite struct Histograms {
+    @Test static func InsertOne() {
+        let histogram: OnlineCDF = .init(resolution: 100, seed: 2)
 
         #expect(histogram.weight == 1)
         #expect(histogram.mean == 2)
@@ -27,12 +23,9 @@ struct Histograms
         #expect(histogram.estimate(quantile: 0.999) == 2)
         #expect(histogram.estimate(quantile: 1.000) == 2)
     }
-    @Test
-    static func InsertMany()
-    {
-        var histogram:OnlineCDF = .init(resolution: 100, seed: 1)
-        for sample:Int in 2 ... 100
-        {
+    @Test static func InsertMany() {
+        var histogram: OnlineCDF = .init(resolution: 100, seed: 1)
+        for sample: Int in 2 ... 100 {
             histogram.insert(.init(sample))
         }
 
@@ -50,11 +43,11 @@ struct Histograms
         #expect(histogram.estimate(quantile: 0.999) == 100)
         #expect(histogram.estimate(quantile: 1.000) == 100)
     }
-    @Test
-    static func InsertOneBatch()
-    {
-        let histogram:OnlineCDF = .init(resolution: 100,
-            sorted: (1 ... 100).map(Double.init(_:)))
+    @Test static func InsertOneBatch() {
+        let histogram: OnlineCDF = .init(
+            resolution: 100,
+            sorted: (1 ... 100).map(Double.init(_:))
+        )
 
         #expect(histogram.weight == 100)
         #expect(histogram.mean == 50.5)
@@ -70,13 +63,14 @@ struct Histograms
         #expect(histogram.estimate(quantile: 0.999) == 100)
         #expect(histogram.estimate(quantile: 1.000) == 100)
     }
-    @Test
-    static func InsertManyBatches()
-    {
-        var histogram:OnlineCDF = .init(resolution: 100,
-            sorted: (  1 ... 100).map(Double.init(_:)))
+    @Test static func InsertManyBatches() {
+        var histogram: OnlineCDF = .init(
+            resolution: 100,
+            sorted: (  1 ... 100).map(Double.init(_:))
+        )
         histogram.insert(
-            sorted: (101 ... 200).map(Double.init(_:)))
+            sorted: (101 ... 200).map(Double.init(_:))
+        )
 
         #expect(histogram.weight == 200)
         #expect(histogram.mean == 100.5)
@@ -92,11 +86,11 @@ struct Histograms
         #expect(histogram.estimate(quantile: 0.999) == 200)
         #expect(histogram.estimate(quantile: 1.000) == 200)
     }
-    @Test
-    static func Large()
-    {
-        let histogram:OnlineCDF = .init(resolution: 100,
-            sorted: (1 ... 1000).map(Double.init(_:)))
+    @Test static func Large() {
+        let histogram: OnlineCDF = .init(
+            resolution: 100,
+            sorted: (1 ... 1000).map(Double.init(_:))
+        )
 
         #expect(histogram.weight == 1000)
         #expect(histogram.mean == 500.5)
@@ -112,11 +106,11 @@ struct Histograms
         #expect(histogram.estimate(quantile: 0.999) == 999.5)
         #expect(histogram.estimate(quantile: 1.000) == 1000)
     }
-    @Test
-    static func Signed()
-    {
-        let histogram:OnlineCDF = .init(resolution: 100,
-            seeds: (1 ... 100).flatMap { [.init($0), .init(-$0)] })
+    @Test static func Signed() {
+        let histogram: OnlineCDF = .init(
+            resolution: 100,
+            seeds: (1 ... 100).flatMap { [.init($0), .init(-$0)] }
+        )
 
         #expect(histogram.weight == 200)
         #expect(histogram.mean == 0)
@@ -131,11 +125,11 @@ struct Histograms
         #expect(histogram.estimate(quantile: 0.999) ==  100)
         #expect(histogram.estimate(quantile: 1.000) ==  100)
     }
-    @Test
-    static func Outliers()
-    {
-        var histogram:OnlineCDF = .init(resolution: 100,
-            sorted: (1 ..< 100).map(Double.init(_:)))
+    @Test static func Outliers() {
+        var histogram: OnlineCDF = .init(
+            resolution: 100,
+            sorted: (1 ..< 100).map(Double.init(_:))
+        )
         histogram.insert(1_000_000)
 
         #expect(histogram.estimate(quantile: 0.000) == 1)
@@ -145,15 +139,17 @@ struct Histograms
         #expect(histogram.estimate(quantile: 0.900) == 90.5)
         #expect(histogram.estimate(quantile: 1.000) == 1_000_000)
     }
-    @Test
-    static func StepsBalanced()
-    {
-        var histogram:OnlineCDF = .init(resolution: 100,
-            sorted: [Double].init(repeatElement(1, count: 100)))
+    @Test static func StepsBalanced() {
+        var histogram: OnlineCDF = .init(
+            resolution: 100,
+            sorted: [Double].init(repeatElement(1, count: 100))
+        )
         histogram.insert(
-            sorted: [Double].init(repeatElement(3, count: 100)))
+            sorted: [Double].init(repeatElement(3, count: 100))
+        )
         histogram.insert(
-            sorted: [Double].init(repeatElement(2, count: 100)))
+            sorted: [Double].init(repeatElement(2, count: 100))
+        )
 
         #expect(histogram.estimate(quantile: 0.0) == 1)
         #expect(histogram.estimate(quantile: 0.1) == 1)
@@ -167,15 +163,17 @@ struct Histograms
         #expect(histogram.estimate(quantile: 0.9) == 3)
         #expect(histogram.estimate(quantile: 1.0) == 3)
     }
-    @Test
-    static func StepsUnbalanced()
-    {
-        var histogram:OnlineCDF = .init(resolution: 100,
-            sorted: [Double].init(repeatElement(2, count: 50)))
+    @Test static func StepsUnbalanced() {
+        var histogram: OnlineCDF = .init(
+            resolution: 100,
+            sorted: [Double].init(repeatElement(2, count: 50))
+        )
         histogram.insert(
-            sorted: [Double].init(repeatElement(1, count: 100)))
+            sorted: [Double].init(repeatElement(1, count: 100))
+        )
         histogram.insert(
-            sorted: [Double].init(repeatElement(3, count: 50)))
+            sorted: [Double].init(repeatElement(3, count: 50))
+        )
 
         #expect(histogram.estimate(quantile: 0.0) == 1)
         #expect(histogram.estimate(quantile: 0.1) == 1)

@@ -1,14 +1,10 @@
 import BSON
 
-extension Mongo
-{
-    @frozen public
-    enum DeleteLimit:Int32, Equatable, Hashable, Sendable
-    {
+extension Mongo {
+    @frozen public enum DeleteLimit: Int32, Equatable, Hashable, Sendable {
         case unlimited = 0
         case one = 1
     }
 }
-extension Mongo.DeleteLimit:BSONDecodable, BSONEncodable
-{
+extension Mongo.DeleteLimit: BSONDecodable, BSONEncodable {
 }

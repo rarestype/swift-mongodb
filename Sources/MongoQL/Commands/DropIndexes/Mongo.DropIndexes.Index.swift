@@ -1,8 +1,5 @@
-extension Mongo.DropIndexes
-{
-    @frozen public
-    enum Index:String, Hashable, Sendable
-    {
+extension Mongo.DropIndexes {
+    @frozen public enum Index: String, Hashable, Sendable {
         case index
     }
 }

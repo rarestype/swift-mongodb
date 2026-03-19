@@ -1,8 +1,5 @@
-extension Mongo
-{
-    public
-    protocol ProjectionOperatorEncodable
-    {
-        func encode(to operator:inout ProjectionOperatorEncoder)
+extension Mongo {
+    public protocol ProjectionOperatorEncodable {
+        func encode(to operator: inout ProjectionOperatorEncoder)
     }
 }

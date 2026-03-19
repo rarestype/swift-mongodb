@@ -1,4 +1,2 @@
-public
-enum Mongo
-{
+public enum Mongo {
 }

@@ -1,7 +1,8 @@
 // swift-tools-version:6.0
 import PackageDescription
 
-let package:Package = .init(name: "swift-mongodb",
+let package: Package = .init(
+    name: "swift-mongodb",
     platforms: [
         .macOS(.v15),
     ],
@@ -27,64 +28,83 @@ let package:Package = .init(name: "swift-mongodb",
         .package(url: "https://github.com/apple/swift-nio-ssl", from: "2.28.0"),
     ],
     targets: [
-        .target(name: "BSON_OrderedCollections",
+        .target(
+            name: "BSON_OrderedCollections",
             dependencies: [
                 .product(name: "BSON", package: "swift-bson"),
                 .product(name: "OrderedCollections", package: "swift-collections"),
-            ]),
+            ]
+        ),
 
         .target(name: "OnlineCDF"),
 
-        .target(name: "SCRAM",
+        .target(
+            name: "SCRAM",
             dependencies: [
                 .product(name: "Base64", package: "h"),
                 .product(name: "MessageAuthentication", package: "h"),
-            ]),
+            ]
+        ),
 
 
-        .target(name: "Mongo",
+        .target(
+            name: "Mongo",
             exclude: [
                 "README.md",
-            ]),
+            ]
+        ),
 
-        .target(name: "MongoABI",
+        .target(
+            name: "MongoABI",
             dependencies: [
                 .target(name: "Mongo"),
                 .product(name: "BSON", package: "swift-bson"),
-            ]),
+            ]
+        ),
 
-        .target(name: "MongoBuiltins",
+        .target(
+            name: "MongoBuiltins",
             dependencies: [
                 .target(name: "MongoABI"),
-            ]),
+            ]
+        ),
 
-        .target(name: "MongoClusters",
+        .target(
+            name: "MongoClusters",
             dependencies: [
                 .target(name: "Mongo"),
                 .product(name: "BSON", package: "swift-bson"),
                 .product(name: "TraceableErrors", package: "gram"),
-            ]),
+            ]
+        ),
 
-        .target(name: "MongoCommands",
+        .target(
+            name: "MongoCommands",
             dependencies: [
                 .target(name: "MongoABI"),
                 .product(name: "UnixTime", package: "u"),
-            ]),
+            ]
+        ),
 
-        .target(name: "MongoConfiguration",
+        .target(
+            name: "MongoConfiguration",
             dependencies: [
                 .target(name: "MongoClusters"),
                 .target(name: "MongoABI"),
                 .product(name: "NIOCore", package: "swift-nio"),
-            ]),
+            ]
+        ),
 
-        .target(name: "MongoDB",
+        .target(
+            name: "MongoDB",
             dependencies: [
                 .target(name: "MongoQL"),
                 .target(name: "MongoDriver"),
-            ]),
+            ]
+        ),
 
-        .target(name: "MongoDriver",
+        .target(
+            name: "MongoDriver",
             dependencies: [
                 .target(name: "BSON_OrderedCollections"),
                 .target(name: "MongoCommands"),
@@ -98,27 +118,35 @@ let package:Package = .init(name: "swift-mongodb",
                 .product(name: "SHA2", package: "h"),
                 .product(name: "NIOPosix", package: "swift-nio"),
                 .product(name: "NIOSSL", package: "swift-nio-ssl"),
-            ]),
+            ]
+        ),
 
-        .target(name: "MongoExecutor",
+        .target(
+            name: "MongoExecutor",
             dependencies: [
                 .target(name: "MongoIO"),
-            ]),
+            ]
+        ),
 
-        .target(name: "MongoIO",
+        .target(
+            name: "MongoIO",
             dependencies: [
                 .target(name: "Mongo"),
                 .target(name: "MongoWire"),
                 .product(name: "NIOCore", package: "swift-nio"),
-            ]),
+            ]
+        ),
 
-        .target(name: "MongoLogging",
+        .target(
+            name: "MongoLogging",
             dependencies: [
                 .target(name: "MongoClusters"),
                 .product(name: "Atomics", package: "swift-atomics"),
-            ]),
+            ]
+        ),
 
-        .target(name: "MongoQL",
+        .target(
+            name: "MongoQL",
             dependencies: [
                 .target(name: "BSON_OrderedCollections"),
                 .target(name: "MongoBuiltins"),
@@ -126,56 +154,70 @@ let package:Package = .init(name: "swift-mongodb",
                 .product(name: "BSON", package: "swift-bson"),
                 .product(name: "BSONReflection", package: "swift-bson"),
                 .product(name: "BSON_UUID", package: "swift-bson"),
-            ]),
+            ]
+        ),
 
-        .target(name: "MongoTesting",
+        .target(
+            name: "MongoTesting",
             dependencies: [
                 .target(name: "MongoDB"),
-            ]),
+            ]
+        ),
 
         // the mongo wire protocol. has no awareness of networking or
         // driver-level concepts.
-        .target(name: "MongoWire",
+        .target(
+            name: "MongoWire",
             dependencies: [
                 .target(name: "Mongo"),
                 .product(name: "BSON", package: "swift-bson"),
                 .product(name: "CRC", package: "h"),
-            ]),
+            ]
+        ),
 
-        .target(name: "UnixTime_Atomics",
+        .target(
+            name: "UnixTime_Atomics",
             dependencies: [
                 .product(name: "Atomics", package: "swift-atomics"),
                 .product(name: "UnixTime", package: "u"),
-            ]),
+            ]
+        ),
 
 
-        .testTarget(name: "OnlineCDFTests",
+        .testTarget(
+            name: "OnlineCDFTests",
             dependencies: [
                 .target(name: "OnlineCDF"),
-            ]),
+            ]
+        ),
 
-        .testTarget(name: "MongoClusterTests",
+        .testTarget(
+            name: "MongoClusterTests",
             dependencies: [
                 .target(name: "MongoClusters"),
-            ]),
+            ]
+        ),
 
-        .testTarget(name: "MongoDBTests",
+        .testTarget(
+            name: "MongoDBTests",
             dependencies: [
                 .target(name: "MongoDB"),
                 .target(name: "MongoTesting"),
-            ]),
+            ]
+        ),
 
-        .testTarget(name: "MongoDriverTests",
+        .testTarget(
+            name: "MongoDriverTests",
             dependencies: [
                 .target(name: "MongoDriver"),
-            ]),
+            ]
+        ),
     ]
 )
 
-for target:Target in package.targets
-{
+for target: Target in package.targets {
     {
-        var settings:[SwiftSetting] = $0 ?? []
+        var settings: [SwiftSetting] = $0 ?? []
 
         settings.append(.enableUpcomingFeature("ExistentialAny"))
 

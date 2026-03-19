@@ -1,9 +1,6 @@
-extension Mongo
-{
+extension Mongo {
     /// An outcome of committing a ``Transaction``.
-    @frozen public
-    enum CommitStatus
-    {
+    @frozen public enum CommitStatus {
         /// The transaction was not committed, because there was nothing to commit.
         /// (No user commands were run with the transaction.)
         case cancelled

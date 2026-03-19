@@ -1,14 +1,11 @@
-extension Mongo
-{
-    public
-    protocol LoginMode<Authentication>
-    {
+extension Mongo {
+    public protocol LoginMode<Authentication> {
         associatedtype Authentication
-        associatedtype Userinfo:Sendable
+        associatedtype Userinfo: Sendable
         associatedtype Database
 
-        init(_ authentication:Authentication?)
+        init(_ authentication: Authentication?)
 
-        func credentials(userinfo:Userinfo, database:Database?) -> Credentials?
+        func credentials(userinfo: Userinfo, database: Database?) -> Credentials?
     }
 }
