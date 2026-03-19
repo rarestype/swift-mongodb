@@ -1,4 +1,4 @@
-import Atomics
+import Synchronization
 import UnixTime
 
 extension Mongo {
@@ -38,15 +38,15 @@ extension Mongo {
 
         private(set) var servers: ServerTable
 
-        private nonisolated let _clusterTime: UnsafeAtomic<AtomicState<ClusterTime>?>
-        private nonisolated let _state: UnsafeAtomic<DeploymentState>
+        private nonisolated let _clusterTime: Mutex<ClusterTime?>
+        private nonisolated let _state: Atomic<DeploymentState>
 
         init(connectionTimeout: Milliseconds, logger: Logger?) {
             self.timeout = .init(milliseconds: connectionTimeout)
             self.logger = logger
 
-            self._clusterTime = .create(nil)
-            self._state = .create(.unknown)
+            self._clusterTime = .init(nil)
+            self._state = .init(.unknown)
 
             self.capabilityRequests = [:]
             self.selectionRequests = [:]
@@ -57,7 +57,7 @@ extension Mongo {
 
         /// The current largest-seen cluster time, if any.
         public nonisolated var clusterTime: Mongo.ClusterTime? {
-            self._clusterTime.load(ordering: .relaxed)?.value
+            self._clusterTime.withLock { $0 }
         }
 
         nonisolated var state: Mongo.DeploymentState {
@@ -65,9 +65,6 @@ extension Mongo {
         }
 
         deinit {
-            self._clusterTime.destroy()
-            self._state.destroy()
-
             guard self.selectionRequests.isEmpty else {
                 fatalError("unreachable (deinitialized while selection requests are awaiting!)")
             }
@@ -90,24 +87,10 @@ extension Mongo.Deployment {
     /// This works differently from topology snapshot updates, which are pushed
     /// by a single actor loop (the `Monitor`) in a blocking fashion.
     @usableFromInline nonisolated func yield(clusterTime: Mongo.ClusterTime?) {
-        guard let clusterTime: Mongo.ClusterTime else {
-            return
+        if  let clusterTime: Mongo.ClusterTime {
+            // update the stored cluster time if the given time is greater
+            self._clusterTime.withLock { clusterTime.combine(into: &$0) }
         }
-        let _: Task<Void, Never> = .init {
-            await self.combine(clusterTime)
-        }
-    }
-    /// Updates the stored cluster time if the given time is greater. This is
-    /// actor-isolated even though it only uses non-isolated operations, to prevent
-    /// races between the atomic load and the atomic store.
-    private func combine(_ clusterTime: Mongo.ClusterTime) {
-        let current: Mongo.AtomicState<Mongo.ClusterTime>? = self._clusterTime.load(
-            ordering: .relaxed
-        )
-        self._clusterTime.store(
-            clusterTime.combined(with: current),
-            ordering: .relaxed
-        )
     }
 }
 extension Mongo.Deployment {

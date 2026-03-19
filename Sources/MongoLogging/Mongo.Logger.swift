@@ -1,4 +1,4 @@
-import Atomics
+import Synchronization
 
 extension Mongo {
     /// A `Logger` instance is a handle to some ``Mongo.LogTarget`` with a thread-safe
@@ -6,18 +6,14 @@ extension Mongo {
     /// to not have to worry about filtering events.
     public final class Logger: Sendable {
         let target: any Mongo.LogTarget
-        private let state: UnsafeAtomic<LogSeverity>
+        private let state: Atomic<LogSeverity>
 
         public init(
             target: any Mongo.LogTarget = Mongo.PrettyPrint.init(),
             level: LogSeverity = .error
         ) {
             self.target = target
-            self.state = .create(level)
-        }
-
-        deinit {
-            self.state.destroy()
+            self.state = .init(level)
         }
     }
 }

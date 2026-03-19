@@ -12,17 +12,15 @@ let package: Package = .init(
         .library(name: "MongoTesting", targets: ["MongoTesting"]),
 
         .library(name: "SCRAM", targets: ["SCRAM"]),
-        .library(name: "UnixTime_Atomics", targets: ["UnixTime_Atomics"]),
     ],
     dependencies: [
         .package(url: "https://github.com/ordo-one/dollup", from: "1.0.1"),
 
         .package(url: "https://github.com/rarestype/swift-bson", from: "2.0.2"),
         .package(url: "https://github.com/rarestype/h", from: "1.0.0"),
-        .package(url: "https://github.com/rarestype/u", from: "1.0.0"),
+        .package(url: "https://github.com/rarestype/u", from: "1.1.0"),
         .package(url: "https://github.com/rarestype/gram", from: "1.0.0"),
 
-        .package(url: "https://github.com/apple/swift-atomics", from: "1.2.0"),
         .package(url: "https://github.com/apple/swift-collections", from: "1.1.0"),
         .package(url: "https://github.com/apple/swift-nio", from: "2.79.0"),
         .package(url: "https://github.com/apple/swift-nio-ssl", from: "2.28.0"),
@@ -112,12 +110,11 @@ let package: Package = .init(
                 .target(name: "MongoExecutor"),
                 .target(name: "MongoLogging"),
                 .target(name: "SCRAM"),
-                .target(name: "UnixTime_Atomics"),
                 .product(name: "BSON_UUID", package: "swift-bson"),
-                .product(name: "Atomics", package: "swift-atomics"),
                 .product(name: "SHA2", package: "h"),
                 .product(name: "NIOPosix", package: "swift-nio"),
                 .product(name: "NIOSSL", package: "swift-nio-ssl"),
+                .product(name: "UnixTime", package: "u"),
             ]
         ),
 
@@ -141,7 +138,6 @@ let package: Package = .init(
             name: "MongoLogging",
             dependencies: [
                 .target(name: "MongoClusters"),
-                .product(name: "Atomics", package: "swift-atomics"),
             ]
         ),
 
@@ -172,14 +168,6 @@ let package: Package = .init(
                 .target(name: "Mongo"),
                 .product(name: "BSON", package: "swift-bson"),
                 .product(name: "CRC", package: "h"),
-            ]
-        ),
-
-        .target(
-            name: "UnixTime_Atomics",
-            dependencies: [
-                .product(name: "Atomics", package: "swift-atomics"),
-                .product(name: "UnixTime", package: "u"),
             ]
         ),
 
