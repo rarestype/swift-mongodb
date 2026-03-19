@@ -1,16 +1,25 @@
 <div align="center">
 
-***`mongodb`***
+🌳 &nbsp; **swift-mongodb** &nbsp; 🌳
 
-[![ci status](https://github.com/tayloraswift/swift-mongodb/actions/workflows/Tests.yml/badge.svg)](https://github.com/tayloraswift/swift-mongodb/actions/workflows/Tests.yml)
-[![ci status](https://github.com/tayloraswift/swift-mongodb/actions/workflows/Documentation.yml/badge.svg)](https://github.com/tayloraswift/swift-mongodb/actions/workflows/Documentation.yml)
+a foundation-free, pure swift mongodb driver
 
-[![swift package index versions](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Ftayloraswift%2Fswift-mongodb%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/tayloraswift/swift-mongodb)
-[![swift package index platforms](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Ftayloraswift%2Fswift-mongodb%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/tayloraswift/swift-mongodb)
+[documentation](https://swiftinit.org/docs/swift-mongodb) ·
+[license](LICENSE)
 
 </div>
 
-*`swift-mongodb`* is a pure-Swift BSON library and MongoDB driver. All of the constituent products in this package are Foundation-free.
+
+## requirements
+
+This package requires Swift 6.0 or greater.
+
+| Platform | Status |
+| -------- | ------ |
+| 💬 Documentation | [![Documentation](https://github.com/rarestype/swift-mongodb/actions/workflows/Documentation.yml/badge.svg)](https://github.com/rarestype/swift-mongodb/actions/workflows/Documentation.yml) |
+| 🐧 Linux | [![Tests](https://github.com/rarestype/swift-mongodb/actions/workflows/Tests.yml/badge.svg)](https://github.com/rarestype/swift-mongodb/actions/workflows/Tests.yml) |
+| 🍏 Darwin | [![Tests](https://github.com/rarestype/swift-mongodb/actions/workflows/Tests.yml/badge.svg)](https://github.com/rarestype/swift-mongodb/actions/workflows/Tests.yml) |
+
 
 ## getting started
 
@@ -40,11 +49,6 @@ print(configuration)
 //  ...
 ```
 
-## toolchain requirement
-
-This package requires Swift 6.0 or greater.
-
-
 ## license and acknowledgements
 
 This library is Apache 2.0 licensed. It originally began as a re-write of [*MongoKitten*](https://github.com/orlandos-nl/MongoKitten) by [Joannis Orlandos](https://github.com/Joannis) and [Robbert Brandsma](https://github.com/Obbut).
@@ -52,15 +56,15 @@ This library is Apache 2.0 licensed. It originally began as a re-write of [*Mong
 
 ## external dependencies
 
-I have verified that all products depended-upon by this package are Foundation-free when compiled for a linux target. Note that some package dependencies do vend products that import Foundation, but swift links binaries at the product level, and this library does not depend on any such products.
+All products depended-upon by this package are Foundation-free when compiled for a Linux target. Note that some package dependencies do vend products that import Foundation, but Swift links binaries at the product level, and this library does not depend on any such products.
 
-My packages:
+Rarest packages:
 
-1.  [`swift-grammar`](https://github.com/tayloraswift/swift-grammar)
+1.  [`gram`](https://github.com/rarestype/gram)
 
     Rationale: this package provides the `TraceableErrors` module which the driver uses to provide rich diagnostics. The driver does not depend on any parser targets.
 
-1.  [`swift-hash`](https://github.com/tayloraswift/swift-hash)
+1.  [`h`](https://github.com/rarestype/h)
 
     Rationale: this package implements cryptographic algorithms the driver uses to complete authentication with `mongod`/`mongos` servers.
 
