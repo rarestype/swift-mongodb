@@ -14,10 +14,12 @@ let package:Package = .init(name: "swift-mongodb",
         .library(name: "UnixTime_Atomics", targets: ["UnixTime_Atomics"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/tayloraswift/swift-bson", from: "1.0.0"),
-        .package(url: "https://github.com/tayloraswift/swift-grammar", from: "0.4.0"),
-        .package(url: "https://github.com/tayloraswift/swift-hash", from: "0.7.0"),
-        .package(url: "https://github.com/tayloraswift/swift-unixtime", from: "0.1.5"),
+        .package(url: "https://github.com/ordo-one/dollup", from: "1.0.1"),
+
+        .package(url: "https://github.com/rarestype/swift-bson", from: "2.0.2"),
+        .package(url: "https://github.com/rarestype/h", from: "1.0.0"),
+        .package(url: "https://github.com/rarestype/u", from: "1.0.0"),
+        .package(url: "https://github.com/rarestype/gram", from: "1.0.0"),
 
         .package(url: "https://github.com/apple/swift-atomics", from: "1.2.0"),
         .package(url: "https://github.com/apple/swift-collections", from: "1.1.0"),
@@ -35,8 +37,8 @@ let package:Package = .init(name: "swift-mongodb",
 
         .target(name: "SCRAM",
             dependencies: [
-                .product(name: "Base64", package: "swift-hash"),
-                .product(name: "MessageAuthentication", package: "swift-hash"),
+                .product(name: "Base64", package: "h"),
+                .product(name: "MessageAuthentication", package: "h"),
             ]),
 
 
@@ -60,13 +62,13 @@ let package:Package = .init(name: "swift-mongodb",
             dependencies: [
                 .target(name: "Mongo"),
                 .product(name: "BSON", package: "swift-bson"),
-                .product(name: "TraceableErrors", package: "swift-grammar"),
+                .product(name: "TraceableErrors", package: "gram"),
             ]),
 
         .target(name: "MongoCommands",
             dependencies: [
                 .target(name: "MongoABI"),
-                .product(name: "UnixTime", package: "swift-unixtime"),
+                .product(name: "UnixTime", package: "u"),
             ]),
 
         .target(name: "MongoConfiguration",
@@ -93,7 +95,7 @@ let package:Package = .init(name: "swift-mongodb",
                 .target(name: "UnixTime_Atomics"),
                 .product(name: "BSON_UUID", package: "swift-bson"),
                 .product(name: "Atomics", package: "swift-atomics"),
-                .product(name: "SHA2", package: "swift-hash"),
+                .product(name: "SHA2", package: "h"),
                 .product(name: "NIOPosix", package: "swift-nio"),
                 .product(name: "NIOSSL", package: "swift-nio-ssl"),
             ]),
@@ -137,13 +139,13 @@ let package:Package = .init(name: "swift-mongodb",
             dependencies: [
                 .target(name: "Mongo"),
                 .product(name: "BSON", package: "swift-bson"),
-                .product(name: "CRC", package: "swift-hash"),
+                .product(name: "CRC", package: "h"),
             ]),
 
         .target(name: "UnixTime_Atomics",
             dependencies: [
                 .product(name: "Atomics", package: "swift-atomics"),
-                .product(name: "UnixTime", package: "swift-unixtime"),
+                .product(name: "UnixTime", package: "u"),
             ]),
 
 
@@ -170,10 +172,10 @@ let package:Package = .init(name: "swift-mongodb",
     ]
 )
 
-for target:PackageDescription.Target in package.targets
+for target:Target in package.targets
 {
     {
-        var settings:[PackageDescription.SwiftSetting] = $0 ?? []
+        var settings:[SwiftSetting] = $0 ?? []
 
         settings.append(.enableUpcomingFeature("ExistentialAny"))
 
