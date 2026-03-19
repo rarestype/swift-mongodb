@@ -1,26 +1,19 @@
 import BSON
 
-extension Mongo
-{
-    @frozen public
-    struct Find<Effect>:Sendable where Effect:Mongo.ReadEffect
-    {
-        public
-        let readConcern:ReadConcern?
-        public
-        let tailing:Effect.Tailing?
-        public
-        let stride:Effect.Stride?
+extension Mongo {
+    @frozen public struct Find<Effect>: Sendable where Effect: Mongo.ReadEffect {
+        public let readConcern: ReadConcern?
+        public let tailing: Effect.Tailing?
+        public let stride: Effect.Stride?
 
-        public
-        var fields:BSON.Document
+        public var fields: BSON.Document
 
-        @inlinable
-        init(readConcern:ReadConcern?,
-            tailing:Effect.Tailing?,
-            stride:Effect.Stride?,
-            fields:BSON.Document)
-        {
+        @inlinable init(
+            readConcern: ReadConcern?,
+            tailing: Effect.Tailing?,
+            stride: Effect.Stride?,
+            fields: BSON.Document
+        ) {
             self.readConcern = readConcern
             self.tailing = tailing
             self.stride = stride
@@ -28,39 +21,36 @@ extension Mongo
         }
     }
 }
-extension Mongo.Find:Mongo.Command
-{
+extension Mongo.Find: Mongo.Command {
     /// The string [`"find"`]().
-    @inlinable public static
-    var type:Mongo.CommandType { .find }
+    @inlinable public static var type: Mongo.CommandType { .find }
 
     /// `Find` supports retryable reads.
-    public
-    typealias ExecutionPolicy = Mongo.Retry
+    public typealias ExecutionPolicy = Mongo.Retry
 
-    public
-    typealias Response = Effect.Batch
+    public typealias Response = Effect.Batch
 
-    @inlinable public static
-    func decode(reply:BSON.DocumentDecoder<BSON.Key>) throws -> Effect.Batch
-    {
+    @inlinable public static func decode(
+        reply: BSON.DocumentDecoder<BSON.Key>
+    ) throws -> Effect.Batch {
         try Effect.decode(reply: reply)
     }
 }
-extension Mongo.Find where Effect.Tailing == Mongo.Tailing, Effect.Stride == Int
-{
-    @inlinable public
-    init(_ collection:Mongo.Collection,
-        readConcern:ReadConcern? = nil,
-        tailing:Mongo.Tailing? = nil,
-        stride:Int,
-        limit:Int? = nil,
-        skip:Int? = nil)
-    {
-        self.init(readConcern: readConcern,
+extension Mongo.Find where Effect.Tailing == Mongo.Tailing, Effect.Stride == Int {
+    @inlinable public init(
+        _ collection: Mongo.Collection,
+        readConcern: ReadConcern? = nil,
+        tailing: Mongo.Tailing? = nil,
+        stride: Int,
+        limit: Int? = nil,
+        skip: Int? = nil
+    ) {
+        self.init(
+            readConcern: readConcern,
             tailing: tailing,
             stride: stride,
-            fields: Self.type(collection))
+            fields: Self.type(collection)
+        )
         ;
         {
             $0["awaitData"] = tailing.flatMap { $0.awaits ? true : nil }
@@ -70,36 +60,39 @@ extension Mongo.Find where Effect.Tailing == Mongo.Tailing, Effect.Stride == Int
             $0["skip"] = skip
         } (&self.fields[BSON.Key.self])
     }
-    @inlinable public
-    init(_ collection:Mongo.Collection,
-        readConcern:ReadConcern? = nil,
-        tailing:Mongo.Tailing? = nil,
-        stride:Int,
-        limit:Int? = nil,
-        skip:Int? = nil,
-        with populate:(inout Self) throws -> ()) rethrows
-    {
-        self.init(collection,
+    @inlinable public init(
+        _ collection: Mongo.Collection,
+        readConcern: ReadConcern? = nil,
+        tailing: Mongo.Tailing? = nil,
+        stride: Int,
+        limit: Int? = nil,
+        skip: Int? = nil,
+        with populate: (inout Self) throws -> ()
+    ) rethrows {
+        self.init(
+            collection,
             readConcern: readConcern,
             tailing: tailing,
             stride: stride,
             limit: limit,
-            skip: skip)
+            skip: skip
+        )
         try populate(&self)
     }
 }
-extension Mongo.Find where Effect.Tailing == Never, Effect.Stride == Never
-{
-    public
-    init(_ collection:Mongo.Collection,
-        readConcern:ReadConcern? = nil,
-        limit:Int,
-        skip:Int? = nil)
-    {
-        self.init(readConcern: readConcern,
+extension Mongo.Find where Effect.Tailing == Never, Effect.Stride == Never {
+    public init(
+        _ collection: Mongo.Collection,
+        readConcern: ReadConcern? = nil,
+        limit: Int,
+        skip: Int? = nil
+    ) {
+        self.init(
+            readConcern: readConcern,
             tailing: nil,
             stride: nil,
-            fields: Self.type(collection))
+            fields: Self.type(collection)
+        )
         ;
         {
             $0["singleBatch"] = true
@@ -108,64 +101,53 @@ extension Mongo.Find where Effect.Tailing == Never, Effect.Stride == Never
             $0["skip"] = skip
         } (&self.fields[BSON.Key.self])
     }
-    @inlinable public
-    init(_ collection:Mongo.Collection,
-        readConcern:ReadConcern? = nil,
-        limit:Int,
-        skip:Int? = nil,
-        with populate:(inout Self) throws -> ()) rethrows
-    {
-        self.init(collection,
+    @inlinable public init(
+        _ collection: Mongo.Collection,
+        readConcern: ReadConcern? = nil,
+        limit: Int,
+        skip: Int? = nil,
+        with populate: (inout Self) throws -> ()
+    ) rethrows {
+        self.init(
+            collection,
             readConcern: readConcern,
             limit: limit,
-            skip: skip)
+            skip: skip
+        )
         try populate(&self)
     }
 }
 
-extension Mongo.Find
-{
-    @frozen public
-    enum Collation:String, Hashable, Sendable
-    {
+extension Mongo.Find {
+    @frozen public enum Collation: String, Hashable, Sendable {
         case collation
     }
 
-    @inlinable public
-    subscript(key:Collation) -> Mongo.Collation?
-    {
-        get
-        {
+    @inlinable public subscript(key: Collation) -> Mongo.Collation? {
+        get {
             nil
         }
-        set(value)
-        {
+        set(value) {
             value?.encode(to: &self.fields[with: key])
         }
     }
 }
-extension Mongo.Find:Mongo.PredicateConfigurable
-{
-    @frozen public
-    enum Filter:String, Hashable, Sendable
-    {
+extension Mongo.Find: Mongo.PredicateConfigurable {
+    @frozen public enum Filter: String, Hashable, Sendable {
         case filter
     }
 
-    @inlinable public
-    subscript(key:Filter, yield:(inout Mongo.PredicateEncoder) -> () = { _ in }) -> Void
-    {
-        mutating get
-        {
+    @inlinable public subscript(
+        key: Filter,
+        yield: (inout Mongo.PredicateEncoder) -> () = { _ in }
+    ) -> Void {
+        mutating get {
             yield(&self.fields[with: key][as: Mongo.PredicateEncoder.self])
         }
     }
 }
-extension Mongo.Find
-{
-    @frozen public
-    enum Flag:String, Hashable, Sendable
-    {
+extension Mongo.Find {
+    @frozen public enum Flag: String, Hashable, Sendable {
         case allowDiskUse
         case allowPartialResults
         case noCursorTimeout
@@ -173,142 +155,105 @@ extension Mongo.Find
         case showRecordIdentifier = "showRecordId"
 
         @available(*, unavailable, renamed: "showRecordIdentifier")
-        public static
-        var showRecordId:Self
-        {
+        public static var showRecordId: Self {
             .showRecordIdentifier
         }
     }
 
-    @inlinable public
-    subscript(key:Flag) -> Bool?
-    {
-        get
-        {
+    @inlinable public subscript(key: Flag) -> Bool? {
+        get {
             nil
         }
-        set(value)
-        {
+        set(value) {
             value?.encode(to: &self.fields[with: key])
         }
     }
 }
-extension Mongo.Find:Mongo.HintableEncoder
-{
-    @frozen public
-    enum Hint:String, Sendable
-    {
+extension Mongo.Find: Mongo.HintableEncoder {
+    @frozen public enum Hint: String, Sendable {
         case hint
     }
 
-    @inlinable public
-    subscript(key:Hint) -> String?
-    {
+    @inlinable public subscript(key: Hint) -> String? {
         get { nil }
         set (value) { value?.encode(to: &self.fields[with: key]) }
     }
 
-    @inlinable public
-    subscript<IndexKey>(key:Hint,
-        using _:IndexKey.Type = IndexKey.self,
-        yield:(inout Mongo.SortEncoder<IndexKey>) -> ()) -> Void
-    {
-        mutating get
-        {
+    @inlinable public subscript<IndexKey>(
+        key: Hint,
+        using _: IndexKey.Type = IndexKey.self,
+        yield: (inout Mongo.SortEncoder<IndexKey>) -> ()
+    ) -> Void {
+        mutating get {
             yield(&self.fields[with: key][as: Mongo.SortEncoder<IndexKey>.self])
         }
     }
 }
-extension Mongo.Find
-{
-    @frozen public
-    enum Let:String, Sendable
-    {
+extension Mongo.Find {
+    @frozen public enum Let: String, Sendable {
         case `let`
     }
 
-    @inlinable public
-    subscript(key:Let, yield:(inout Mongo.LetEncoder) -> ()) -> Void
-    {
-        mutating get
-        {
+    @inlinable public subscript(key: Let, yield: (inout Mongo.LetEncoder) -> ()) -> Void {
+        mutating get {
             yield(&self.fields[with: key][as: Mongo.LetEncoder.self])
         }
     }
 
     @available(*, unavailable)
-    @inlinable public
-    subscript(key:Let) -> Mongo.LetDocument?
-    {
+    @inlinable public subscript(key: Let) -> Mongo.LetDocument? {
         nil
     }
 }
-extension Mongo.Find
-{
-    @frozen public
-    enum Projection:String, Hashable, Sendable
-    {
+extension Mongo.Find {
+    @frozen public enum Projection: String, Hashable, Sendable {
         case projection
     }
 
     /// Encodes a projection document.
-    @inlinable public
-    subscript<CodingKey>(key:Projection,
-        using _:CodingKey.Type = CodingKey.self,
-        yield:(inout Mongo.ProjectionEncoder<CodingKey>) -> ()) -> Void
-    {
-        mutating get
-        {
+    @inlinable public subscript<CodingKey>(
+        key: Projection,
+        using _: CodingKey.Type = CodingKey.self,
+        yield: (inout Mongo.ProjectionEncoder<CodingKey>) -> ()
+    ) -> Void {
+        mutating get {
             yield(&self.fields[with: key][as: Mongo.ProjectionEncoder<CodingKey>.self])
         }
     }
 
     /// Encodes a projection document from a model type.
-    @inlinable public
-    subscript<ProjectionDocument>(key:Projection) -> ProjectionDocument?
-        where ProjectionDocument:Mongo.ProjectionEncodable
-    {
+    @inlinable public subscript<ProjectionDocument>(key: Projection) -> ProjectionDocument?
+        where ProjectionDocument: Mongo.ProjectionEncodable {
         get { nil }
         set (value) { value.map { self[key, $0.encode(to:)] } }
     }
 }
-extension Mongo.Find
-{
-    @frozen public
-    enum Range:String, Hashable, Sendable
-    {
+extension Mongo.Find {
+    @frozen public enum Range: String, Hashable, Sendable {
         case max
         case min
     }
 
-    @inlinable public
-    subscript(key:Range) -> BSON.Document?
-    {
-        get
-        {
+    @inlinable public subscript(key: Range) -> BSON.Document? {
+        get {
             nil
         }
-        set(value)
-        {
+        set(value) {
             value?.encode(to: &self.fields[with: key])
         }
     }
 }
-extension Mongo.Find:Mongo.SortableEncoder
-{
-    @frozen public
-    enum Sort:String, Sendable
-    {
+extension Mongo.Find: Mongo.SortableEncoder {
+    @frozen public enum Sort: String, Sendable {
         case sort
     }
 
-    @inlinable public
-    subscript<CodingKey>(key:Sort,
-        using _:CodingKey.Type = CodingKey.self,
-        yield:(inout Mongo.SortEncoder<CodingKey>) -> ()) -> Void
-    {
-        mutating get
-        {
+    @inlinable public subscript<CodingKey>(
+        key: Sort,
+        using _: CodingKey.Type = CodingKey.self,
+        yield: (inout Mongo.SortEncoder<CodingKey>) -> ()
+    ) -> Void {
+        mutating get {
             yield(&self.fields[with: key][as: Mongo.SortEncoder<CodingKey>.self])
         }
     }

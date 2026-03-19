@@ -1,22 +1,16 @@
 import BSON
 
-extension Mongo.Hello
-{
-    struct ClientMetadata:Sendable
-    {
-        let appname:String?
+extension Mongo.Hello {
+    struct ClientMetadata: Sendable {
+        let appname: String?
 
-        init(appname:String?)
-        {
+        init(appname: String?) {
             self.appname = appname
         }
     }
 }
-extension Mongo.Hello.ClientMetadata
-{
-    private static
-    var os:String
-    {
+extension Mongo.Hello.ClientMetadata {
+    private static var os: String {
         #if os(Linux)
         "Linux"
         #elseif os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
@@ -28,24 +22,18 @@ extension Mongo.Hello.ClientMetadata
         #endif
     }
 }
-extension Mongo.Hello.ClientMetadata:BSONEncodable, BSONDocumentEncodable
-{
-    func encode(to bson:inout BSON.DocumentEncoder<BSON.Key>)
-    {
-        if let appname:String = self.appname
-        {
-            bson["application"](BSON.Key.self)
-            {
+extension Mongo.Hello.ClientMetadata: BSONEncodable, BSONDocumentEncodable {
+    func encode(to bson: inout BSON.DocumentEncoder<BSON.Key>) {
+        if let appname: String = self.appname {
+            bson["application"](BSON.Key.self) {
                 $0["name"] = appname
             }
         }
-        bson["driver"](BSON.Key.self)
-        {
+        bson["driver"](BSON.Key.self) {
             $0["name"] = "swift-mongodb"
             $0["version"] = "0"
         }
-        bson["os"](BSON.Key.self)
-        {
+        bson["os"](BSON.Key.self) {
             $0["type"] = Self.os
         }
     }

@@ -1,37 +1,29 @@
 import BSON
 import SCRAM
 
-extension Mongo
-{
+extension Mongo {
     /// The MongoDB `saslStart` command.
     ///
     /// This command is internal because it must not be used with sessions.
-    struct SASLStart
-    {
-        let mechanism:Authentication.SASL
-        let scram:SCRAM.Start
+    struct SASLStart {
+        let mechanism: Authentication.SASL
+        let scram: SCRAM.Start
 
-        init(mechanism:Authentication.SASL, scram:SCRAM.Start)
-        {
+        init(mechanism: Authentication.SASL, scram: SCRAM.Start) {
             self.mechanism = mechanism
             self.scram = scram
         }
     }
 }
-extension Mongo.SASLStart
-{
-    static
-    var type:Mongo.CommandType { .saslStart }
+extension Mongo.SASLStart {
+    static var type: Mongo.CommandType { .saslStart }
 }
-extension Mongo.SASLStart:BSONDocumentEncodable
-{
-    func encode(to bson:inout BSON.DocumentEncoder<BSON.Key>)
-    {
+extension Mongo.SASLStart: BSONDocumentEncodable {
+    func encode(to bson: inout BSON.DocumentEncoder<BSON.Key>) {
         bson[.init(Self.type)] = true
         bson["mechanism"] = self.mechanism
         bson["payload"] = self.scram.message.base64
-        bson["options"](BSON.Key.self)
-        {
+        bson["options"](BSON.Key.self) {
             $0["skipEmptyExchange"] = true
         }
     }

@@ -1,15 +1,11 @@
 import BSON
 
-extension Mongo.Timeseries
-{
-    @frozen public
-    enum Granularity:String, Hashable, Sendable
-    {
+extension Mongo.Timeseries {
+    @frozen public enum Granularity: String, Hashable, Sendable {
         case seconds
         case minutes
         case hours
     }
 }
-extension Mongo.Timeseries.Granularity:BSONDecodable, BSONEncodable
-{
+extension Mongo.Timeseries.Granularity: BSONDecodable, BSONEncodable {
 }

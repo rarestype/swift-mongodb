@@ -1,15 +1,11 @@
 import BSON
 
-extension Mongo
-{
-    @frozen public
-    enum ExplainMode:String, Equatable, Hashable, Sendable
-    {
+extension Mongo {
+    @frozen public enum ExplainMode: String, Equatable, Hashable, Sendable {
         case queryPlanner
         case executionStats
         case allPlansExecution
     }
 }
-extension Mongo.ExplainMode:BSONDecodable, BSONEncodable
-{
+extension Mongo.ExplainMode: BSONDecodable, BSONEncodable {
 }

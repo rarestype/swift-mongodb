@@ -1,24 +1,20 @@
 import UnixTime
 
-extension Mongo
-{
-    struct MonitorServices:Sendable
-    {
-        private
-        let listenerConnection:Listener.Connection,
-            samplerConnection:Sampler.Connection
+extension Mongo {
+    struct MonitorServices: Sendable {
+        private let listenerConnection: Listener.Connection,
+        samplerConnection: Sampler.Connection
 
-        private
-        let handshake:Handshake
+        private let handshake: Handshake
 
-        private
-        let interval:Milliseconds
+        private let interval: Milliseconds
 
-        init(listenerConnection:Listener.Connection,
-            samplerConnection:Sampler.Connection,
-            handshake:Mongo.Handshake,
-            interval:Milliseconds)
-        {
+        init(
+            listenerConnection: Listener.Connection,
+            samplerConnection: Sampler.Connection,
+            handshake: Mongo.Handshake,
+            interval: Milliseconds
+        ) {
             self.listenerConnection = listenerConnection
             self.samplerConnection = samplerConnection
             self.handshake = handshake
@@ -26,29 +22,27 @@ extension Mongo
         }
     }
 }
-extension Mongo.MonitorServices
-{
-    var initialTopologyUpdate:Mongo.TopologyUpdate
-    {
+extension Mongo.MonitorServices {
+    var initialTopologyUpdate: Mongo.TopologyUpdate {
         self.handshake.response.topologyUpdate
     }
-    var initialLatency:Nanoseconds
-    {
+    var initialLatency: Nanoseconds {
         self.handshake.latency
     }
 }
-extension Mongo.MonitorServices
-{
-    var listener:Mongo.Listener
-    {
-        .init(connection: self.listenerConnection,
+extension Mongo.MonitorServices {
+    var listener: Mongo.Listener {
+        .init(
+            connection: self.listenerConnection,
             interval: self.interval,
-            seed: self.handshake.response.topologyVersion)
+            seed: self.handshake.response.topologyVersion
+        )
     }
-    var sampler:Mongo.Sampler
-    {
-        .init(connection: self.samplerConnection,
+    var sampler: Mongo.Sampler {
+        .init(
+            connection: self.samplerConnection,
             interval: self.interval,
-            seed: self.handshake.latency)
+            seed: self.handshake.latency
+        )
     }
 }

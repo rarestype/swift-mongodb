@@ -1,38 +1,26 @@
 import BSON
 
-extension Mongo.Accumulator
-{
-    @frozen public
-    enum SuperlativeSort:String, Hashable, Sendable
-    {
+extension Mongo.Accumulator {
+    @frozen public enum SuperlativeSort: String, Hashable, Sendable {
         case bottom = "$bottom"
         case top    = "$top"
     }
 }
-extension Mongo.Accumulator.SuperlativeSort
-{
-    @inlinable public
-    var n:BSON.Key
-    {
-        switch self
-        {
+extension Mongo.Accumulator.SuperlativeSort {
+    @inlinable public var n: BSON.Key {
+        switch self {
         case .bottom:   "$bottomN"
         case .top:      "$topN"
         }
     }
 }
-extension Mongo.Accumulator.SuperlativeSort
-{
+extension Mongo.Accumulator.SuperlativeSort {
     @available(*, unavailable, renamed: "top")
-    public static
-    var topN:Self
-    {
+    public static var topN: Self {
         .top
     }
     @available(*, unavailable, renamed: "bottom")
-    public static
-    var bottomN:Self
-    {
+    public static var bottomN: Self {
         .bottom
     }
 }

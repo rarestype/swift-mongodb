@@ -1,8 +1,5 @@
-extension Mongo.MergeDocument
-{
-    @frozen public
-    enum Into:String, Hashable, Sendable
-    {
+extension Mongo.MergeDocument {
+    @frozen public enum Into: String, Hashable, Sendable {
         case into
     }
 }

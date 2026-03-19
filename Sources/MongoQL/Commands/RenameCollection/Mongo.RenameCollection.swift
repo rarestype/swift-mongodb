@@ -1,66 +1,53 @@
 import BSON
 
-extension Mongo
-{
-    public
-    struct RenameCollection:Sendable
-    {
-        public
-        let writeConcern:WriteConcern?
+extension Mongo {
+    public struct RenameCollection: Sendable {
+        public let writeConcern: WriteConcern?
 
-        public
-        var fields:BSON.Document
+        public var fields: BSON.Document
 
-        @usableFromInline internal
-        init(writeConcern:WriteConcern?,
-            fields:BSON.Document)
-        {
+        @usableFromInline internal init(
+            writeConcern: WriteConcern?,
+            fields: BSON.Document
+        ) {
             self.writeConcern = writeConcern
             self.fields = fields
         }
     }
 }
-extension Mongo.RenameCollection:Mongo.Command
-{
-    @inlinable public static
-    var type:Mongo.CommandType { .renameCollection }
+extension Mongo.RenameCollection: Mongo.Command {
+    @inlinable public static var type: Mongo.CommandType { .renameCollection }
 
-    public
-    typealias Database = Mongo.Database.Admin
+    public typealias Database = Mongo.Database.Admin
 }
-extension Mongo.RenameCollection
-{
-    public
-    init(_ old:Mongo.Namespaced<Mongo.Collection>,
-        to new:Mongo.Namespaced<Mongo.Collection>,
-        writeConcern:WriteConcern? = nil)
-    {
-        self.init(writeConcern: writeConcern, fields: Self.type(some: old)
-        {
-            $0["to"] = new
-        })
+extension Mongo.RenameCollection {
+    public init(
+        _ old: Mongo.Namespaced<Mongo.Collection>,
+        to new: Mongo.Namespaced<Mongo.Collection>,
+        writeConcern: WriteConcern? = nil
+    ) {
+        self.init(
+            writeConcern: writeConcern, fields: Self.type(some: old) {
+                $0["to"] = new
+            }
+        )
     }
-    @inlinable public
-    init(_ old:Mongo.Namespaced<Mongo.Collection>,
-        to new:Mongo.Namespaced<Mongo.Collection>,
-        writeConcern:WriteConcern? = nil,
-        with populate:(inout Self) throws -> ()) rethrows
-    {
+    @inlinable public init(
+        _ old: Mongo.Namespaced<Mongo.Collection>,
+        to new: Mongo.Namespaced<Mongo.Collection>,
+        writeConcern: WriteConcern? = nil,
+        with populate: (inout Self) throws -> ()
+    ) rethrows {
         self.init(old, to: new, writeConcern: writeConcern)
         try populate(&self)
     }
 }
-extension Mongo.RenameCollection
-{
-    @inlinable public
-    subscript(key:DropTarget) -> Bool?
-    {
-        get
-        {
+extension Mongo.RenameCollection {
+    @inlinable public subscript(key: DropTarget) -> Bool? {
+        get {
             nil
         }
-        set(value)
-        {
+        set(value) {
             value?.encode(to: &self.fields[with: key])
         }
     }

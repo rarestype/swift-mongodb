@@ -1,7 +1,6 @@
 import BSON
 
-extension Mongo
-{
+extension Mongo {
     /// Lists all existing databases along with basic statistics about them.
     /// This command must run against the `admin` database.
     ///
@@ -9,54 +8,37 @@ extension Mongo
     /// ``ListDatabases.NameOnly`` command.
     ///
     /// > See:  https://www.mongodb.com/docs/manual/reference/command/listDatabases/
-    public
-    struct ListDatabases:Sendable
-    {
-        public
-        var fields:BSON.Document
+    public struct ListDatabases: Sendable {
+        public var fields: BSON.Document
 
-        public
-        init()
-        {
+        public init() {
             self.fields = Self.type(nil)
         }
     }
 }
-extension Mongo.ListDatabases
-{
-    @inlinable public
-    init(with populate:(inout Self) throws -> ()) rethrows
-    {
+extension Mongo.ListDatabases {
+    @inlinable public init(with populate: (inout Self) throws -> ()) rethrows {
         self.init()
         try populate(&self)
     }
 }
-extension Mongo.ListDatabases:Mongo.Command
-{
-    @inlinable public static
-    var type:Mongo.CommandType { .listDatabases }
+extension Mongo.ListDatabases: Mongo.Command {
+    @inlinable public static var type: Mongo.CommandType { .listDatabases }
 
     /// `ListDatabases` supports retryable reads.
-    public
-    typealias ExecutionPolicy = Mongo.Retry
+    public typealias ExecutionPolicy = Mongo.Retry
 
-    public
-    typealias Database = Mongo.Database.Admin
+    public typealias Database = Mongo.Database.Admin
 
-    public
-    typealias Response =
-    (
-        totalSize:Int,
-        databases:[Mongo.DatabaseMetadata]
+    public typealias Response = (
+        totalSize: Int,
+        databases: [Mongo.DatabaseMetadata]
     )
 
-    @inlinable public static
-    func decode(reply bson:BSON.DocumentDecoder<BSON.Key>) throws ->
-    (
-        totalSize:Int,
-        databases:[Mongo.DatabaseMetadata]
-    )
-    {
+    @inlinable public static func decode(reply bson: BSON.DocumentDecoder<BSON.Key>) throws -> (
+        totalSize: Int,
+        databases: [Mongo.DatabaseMetadata]
+    ) {
         (
             totalSize: try bson["totalSize"].decode(to: Int.self),
             databases: try bson["databases"].decode(to: [Mongo.DatabaseMetadata].self)
@@ -66,30 +48,21 @@ extension Mongo.ListDatabases:Mongo.Command
 // FIXME: ListDatabases *can* run on a secondary,
 // but *should* run on a primary.
 
-extension Mongo.ListDatabases
-{
-    @inlinable public
-    subscript(key:AuthorizedDatabases) -> Bool?
-    {
-        get
-        {
+extension Mongo.ListDatabases {
+    @inlinable public subscript(key: AuthorizedDatabases) -> Bool? {
+        get {
             nil
         }
-        set(value)
-        {
+        set(value) {
             value?.encode(to: &self.fields[with: key])
         }
     }
 
-    @inlinable public
-    subscript(key:Filter) -> Mongo.PredicateDocument?
-    {
-        get
-        {
+    @inlinable public subscript(key: Filter) -> Mongo.PredicateDocument? {
+        get {
             nil
         }
-        set(value)
-        {
+        set(value) {
             value?.encode(to: &self.fields[with: key])
         }
     }

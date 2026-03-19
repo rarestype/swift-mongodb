@@ -1,11 +1,8 @@
 import BSON
 import MongoABI
 
-extension Mongo
-{
-    public
-    enum CommandType:String, Hashable, Sendable
-    {
+extension Mongo {
+    public enum CommandType: String, Hashable, Sendable {
         case abortTransaction
         case aggregate
         case create
@@ -39,32 +36,26 @@ extension Mongo
         case update
     }
 }
-extension Mongo.CommandType:BSONDecodable, BSONEncodable
-{
+extension Mongo.CommandType: BSONDecodable, BSONEncodable {
 }
-extension Mongo.CommandType
-{
+extension Mongo.CommandType {
     /// Encodes the collection name as the subject of the command, or `1` if nil.
-    @inlinable public
-    func callAsFunction(_ collection:Mongo.Collection?,
-        then encode:(inout BSON.DocumentEncoder<BSON.Key>) -> () = { _  in }) -> BSON.Document
-    {
-        if  let collection
-        {
+    @inlinable public func callAsFunction(
+        _ collection: Mongo.Collection?,
+        then encode: (inout BSON.DocumentEncoder<BSON.Key>) -> () = { _  in }
+    ) -> BSON.Document {
+        if  let collection {
             self(some: collection, then: encode)
-        }
-        else
-        {
+        } else {
             self(some: 1 as Int32, then: encode)
         }
     }
 
-    @inlinable public
-    func callAsFunction(some first:some BSONEncodable,
-        then encode:(inout BSON.DocumentEncoder<BSON.Key>) -> () = { _  in }) -> BSON.Document
-    {
-        .init(BSON.Key.self)
-        {
+    @inlinable public func callAsFunction(
+        some first: some BSONEncodable,
+        then encode: (inout BSON.DocumentEncoder<BSON.Key>) -> () = { _  in }
+    ) -> BSON.Document {
+        .init(BSON.Key.self) {
             $0[.init(rawValue: self.rawValue)] = first
             encode(&$0)
         }

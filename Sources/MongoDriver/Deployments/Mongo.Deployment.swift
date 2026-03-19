@@ -1,8 +1,7 @@
 import Atomics
 import UnixTime
 
-extension Mongo
-{
+extension Mongo {
     /// A type that models the state of a MongoDB deployment.
     ///
     /// Instances of this type are responsible for storing the following information:
@@ -22,38 +21,27 @@ extension Mongo
     /// types like ``Session`` and ``SessionPool`` don’t need to interact with
     /// the service monitor, and service monitoring computations don’t block requests
     /// for information about deployment state.
-    public final
-    actor Deployment
-    {
+    public final actor Deployment {
         /// The default timeout for driver operations. This is generally understood to represent
         /// a global network timeout, and is therefore constant across an application.
         ///
         /// Some operations (change streams, tailable cursors, etc.) might expect you to supply
         /// a separate timeout for the operation itself.
-        @usableFromInline nonisolated
-        let timeout:NetworkTimeout
+        @usableFromInline nonisolated let timeout: NetworkTimeout
         //  Right now, we don’t do anything with this from this type. But other
         //  types use it through their deployment pointers.
-        internal nonisolated
-        let logger:Logger?
+        internal nonisolated let logger: Logger?
 
-        private
-        var capabilityRequests:[UInt: CapabilityRequest]
-        private
-        var selectionRequests:[UInt: SelectionRequest]
-        private
-        var counter:UInt
+        private var capabilityRequests: [UInt: CapabilityRequest]
+        private var selectionRequests: [UInt: SelectionRequest]
+        private var counter: UInt
 
-        private(set)
-        var servers:ServerTable
+        private(set) var servers: ServerTable
 
-        private nonisolated
-        let _clusterTime:UnsafeAtomic<AtomicState<ClusterTime>?>
-        private nonisolated
-        let _state:UnsafeAtomic<DeploymentState>
+        private nonisolated let _clusterTime: UnsafeAtomic<AtomicState<ClusterTime>?>
+        private nonisolated let _state: UnsafeAtomic<DeploymentState>
 
-        init(connectionTimeout:Milliseconds, logger:Logger?)
-        {
+        init(connectionTimeout: Milliseconds, logger: Logger?) {
             self.timeout = .init(milliseconds: connectionTimeout)
             self.logger = logger
 
@@ -68,39 +56,29 @@ extension Mongo
         }
 
         /// The current largest-seen cluster time, if any.
-        public nonisolated
-        var clusterTime:Mongo.ClusterTime?
-        {
+        public nonisolated var clusterTime: Mongo.ClusterTime? {
             self._clusterTime.load(ordering: .relaxed)?.value
         }
 
-        nonisolated
-        var state:Mongo.DeploymentState
-        {
+        nonisolated var state: Mongo.DeploymentState {
             self._state.load(ordering: .relaxed)
         }
 
-        deinit
-        {
+        deinit {
             self._clusterTime.destroy()
             self._state.destroy()
 
-            guard self.selectionRequests.isEmpty
-            else
-            {
+            guard self.selectionRequests.isEmpty else {
                 fatalError("unreachable (deinitialized while selection requests are awaiting!)")
             }
-            guard self.capabilityRequests.isEmpty
-            else
-            {
+            guard self.capabilityRequests.isEmpty else {
                 fatalError("unreachable (deinitialized while session requests are awaiting!)")
             }
         }
     }
 }
 
-extension Mongo.Deployment
-{
+extension Mongo.Deployment {
     /// Synchronously yield an observed cluster time to this deployment model.
     /// The time sample will be integrated into the deployment state
     /// asynchronously.
@@ -111,33 +89,28 @@ extension Mongo.Deployment
     ///
     /// This works differently from topology snapshot updates, which are pushed
     /// by a single actor loop (the `Monitor`) in a blocking fashion.
-    @usableFromInline nonisolated
-    func yield(clusterTime:Mongo.ClusterTime?)
-    {
-        guard let clusterTime:Mongo.ClusterTime
-        else
-        {
+    @usableFromInline nonisolated func yield(clusterTime: Mongo.ClusterTime?) {
+        guard let clusterTime: Mongo.ClusterTime else {
             return
         }
-        let _:Task<Void, Never> = .init
-        {
+        let _: Task<Void, Never> = .init {
             await self.combine(clusterTime)
         }
     }
     /// Updates the stored cluster time if the given time is greater. This is
     /// actor-isolated even though it only uses non-isolated operations, to prevent
     /// races between the atomic load and the atomic store.
-    private
-    func combine(_ clusterTime:Mongo.ClusterTime)
-    {
-        let current:Mongo.AtomicState<Mongo.ClusterTime>? = self._clusterTime.load(
-            ordering: .relaxed)
-        self._clusterTime.store(clusterTime.combined(with: current),
-            ordering: .relaxed)
+    private func combine(_ clusterTime: Mongo.ClusterTime) {
+        let current: Mongo.AtomicState<Mongo.ClusterTime>? = self._clusterTime.load(
+            ordering: .relaxed
+        )
+        self._clusterTime.store(
+            clusterTime.combined(with: current),
+            ordering: .relaxed
+        )
     }
 }
-extension Mongo.Deployment
-{
+extension Mongo.Deployment {
     /// Pushes a server table to the deployment model.
     ///
     /// Unlike the cluster time, topology updates are computationally intensive, and
@@ -147,42 +120,33 @@ extension Mongo.Deployment
     /// This method should only be called from a single task or actor context, and
     /// the caller should always wait for the call to complete in order to ensure
     /// sequential consistency.
-    func push(table servers:Mongo.ServerTable)
-    {
-        let state:Mongo.DeploymentState = servers.state
+    func push(table servers: Mongo.ServerTable) {
+        let state: Mongo.DeploymentState = servers.state
 
         self._state.store(state, ordering: .relaxed)
 
         self.servers = servers
 
-        for (id, request):(UInt, SelectionRequest) in self.selectionRequests
-        {
-            if  let pool:Mongo.ConnectionPool = self.servers[request.preference]
-            {
+        for (id, request): (UInt, SelectionRequest) in self.selectionRequests {
+            if  let pool: Mongo.ConnectionPool = self.servers[request.preference] {
                 self.selectionRequests[id].fulfill(with: pool)
             }
         }
 
-        if  let capabilities:Mongo.DeploymentCapabilities = state.capabilities
-        {
-            for id:UInt in self.capabilityRequests.keys
-            {
+        if  let capabilities: Mongo.DeploymentCapabilities = state.capabilities {
+            for id: UInt in self.capabilityRequests.keys {
                 self.capabilityRequests[id].fulfill(with: capabilities)
             }
         }
     }
 }
-extension Mongo.Deployment
-{
-    private
-    func request() -> UInt
-    {
+extension Mongo.Deployment {
+    private func request() -> UInt {
         self.counter += 1
         return self.counter
     }
 }
-extension Mongo.Deployment
-{
+extension Mongo.Deployment {
     /// Returns deployment-wide logical session parameters, without suspending,
     /// if the deployment is known to support logical sessions. Suspends for at
     /// most the specified amount of time otherwise, returning as soon as this
@@ -191,80 +155,74 @@ extension Mongo.Deployment
     /// This method often suspends if it is called immediately after initializing
     /// a session pool, because the pool did not have time to connect to any
     /// servers yet.
-    nonisolated
-    func capabilities(
-        by deadline:ContinuousClock.Instant) async throws -> Mongo.DeploymentCapabilities
-    {
-        if  let capabilities:Mongo.DeploymentCapabilities = self.state.capabilities
-        {
+    nonisolated func capabilities(
+        by deadline: ContinuousClock.Instant
+    ) async throws -> Mongo.DeploymentCapabilities {
+        if  let capabilities: Mongo.DeploymentCapabilities = self.state.capabilities {
             capabilities
-        }
-        else
-        {
+        } else {
             try await self.capabilities(by: deadline).get()
         }
     }
-    private
-    func capabilities(
-        by deadline:ContinuousClock.Instant) async -> CapabilityResponse
-    {
-        let id:UInt = self.request()
+    private func capabilities(
+        by deadline: ContinuousClock.Instant
+    ) async -> CapabilityResponse {
+        let id: UInt = self.request()
 
-        async
-        let _:Void = self.fail(capabilityRequest: id, once: deadline)
+        async let _: Void = self.fail(capabilityRequest: id, once: deadline)
 
-        return await withCheckedContinuation
-        {
-            self.capabilityRequests.updateValue(.init(promise: $0),
-                forKey: id)
+        return await withCheckedContinuation {
+            self.capabilityRequests.updateValue(
+                .init(promise: $0),
+                forKey: id
+            )
         }
     }
-    private
-    func fail(capabilityRequest id:UInt,
-        once deadline:ContinuousClock.Instant) async throws
-    {
+    private func fail(
+        capabilityRequest id: UInt,
+        once deadline: ContinuousClock.Instant
+    ) async throws {
         //  will throw ``CancellationError`` if request succeeds
         try await Task.sleep(until: deadline, clock: .continuous)
         self.capabilityRequests[id].fail(diagnosing: self.servers)
     }
 }
-extension Mongo.Deployment
-{
-    @usableFromInline internal
-    func pool(selecting preference:Mongo.ReadPreference,
-        by deadline:ContinuousClock.Instant) async throws -> Mongo.ConnectionPool
-    {
+extension Mongo.Deployment {
+    @usableFromInline internal func pool(
+        selecting preference: Mongo.ReadPreference,
+        by deadline: ContinuousClock.Instant
+    ) async throws -> Mongo.ConnectionPool {
         try await self.select(preference, by: deadline).get()
     }
-    func select(_ preference:Mongo.ReadPreference,
-        by deadline:ContinuousClock.Instant) async -> SelectionResponse
-    {
-        if  let pool:Mongo.ConnectionPool = self.servers[preference]
-        {
+    func select(
+        _ preference: Mongo.ReadPreference,
+        by deadline: ContinuousClock.Instant
+    ) async -> SelectionResponse {
+        if  let pool: Mongo.ConnectionPool = self.servers[preference] {
             return .success(pool)
         }
 
-        let id:UInt = self.request()
+        let id: UInt = self.request()
 
-        async
-        let _:Void = self.fail(selectionRequest: id, once: deadline)
+        async let _: Void = self.fail(selectionRequest: id, once: deadline)
 
-        return await withCheckedContinuation
-        {
-            self.selectionRequests.updateValue(.init(preference: preference, promise: $0),
-                forKey: id)
+        return await withCheckedContinuation {
+            self.selectionRequests.updateValue(
+                .init(preference: preference, promise: $0),
+                forKey: id
+            )
         }
     }
-    private
-    func fail(selectionRequest id:UInt, once deadline:ContinuousClock.Instant) async throws
-    {
+    private func fail(
+        selectionRequest id: UInt,
+        once deadline: ContinuousClock.Instant
+    ) async throws {
         //  will throw ``CancellationError`` if request succeeds
         try await Task.sleep(until: deadline, clock: .continuous)
         self.selectionRequests[id].fail(diagnosing: self.servers)
     }
 }
-extension Mongo.Deployment
-{
+extension Mongo.Deployment {
     /// Sends an ``EndSessions`` command ending the given list of sessions
     /// to an appropriate server for this deployment’s topology, and awaits
     /// its response.
@@ -283,32 +241,30 @@ extension Mongo.Deployment
     ///
     /// This method will not submit any work to the actor if `sessions` is empty.
     @discardableResult
-    nonisolated
-    func end(sessions:__owned [Mongo.SessionIdentifier]) async -> Bool
-    {
-        guard let command:Mongo.EndSessions = .init(sessions)
-        else
-        {
+    nonisolated func end(sessions: __owned [Mongo.SessionIdentifier]) async -> Bool {
+        guard let command: Mongo.EndSessions = .init(sessions) else {
             return true
         }
-        do
-        {
-            let deadline:ContinuousClock.Instant = self.timeout.deadline()
+        do {
+            let deadline: ContinuousClock.Instant = self.timeout.deadline()
 
-            let connections:Mongo.ConnectionPool = try await self.pool(
+            let connections: Mongo.ConnectionPool = try await self.pool(
                 selecting: .primaryPreferred,
-                by: deadline)
-            let connection:Mongo.Connection = try await .init(from: connections,
-                by: deadline)
+                by: deadline
+            )
+            let connection: Mongo.Connection = try await .init(
+                from: connections,
+                by: deadline
+            )
 
-            let reply:Mongo.Reply = try await connection.allocation.run(command: command,
+            let reply: Mongo.Reply = try await connection.allocation.run(
+                command: command,
                 against: .admin,
-                by: deadline)
+                by: deadline
+            )
 
             return reply.ok
-        }
-        catch
-        {
+        } catch {
             return false
         }
     }

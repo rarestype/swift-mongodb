@@ -1,7 +1,6 @@
 import BSON
 
-extension Mongo
-{
+extension Mongo {
     /// Retrieves information about collections (including collection-views) in a
     /// database.
     ///
@@ -19,49 +18,33 @@ extension Mongo
     ///
     /// >   See:
     /// https://github.com/mongodb/specifications/blob/master/source/enumerate-collections.rst
-    public
-    struct ListCollections<Element>:Sendable where Element:BSONDecodable & Sendable
-    {
-        public
-        let stride:Int?
+    public struct ListCollections<Element>: Sendable where Element: BSONDecodable & Sendable {
+        public let stride: Int?
 
-        public
-        var fields:BSON.Document
+        public var fields: BSON.Document
 
-        private
-        init(stride:Int, fields:BSON.Document)
-        {
+        private init(stride: Int, fields: BSON.Document) {
             self.stride = stride
             self.fields = fields
         }
     }
 }
-extension Mongo.ListCollections:Mongo.Command
-{
+extension Mongo.ListCollections: Mongo.Command {
     /// `ListCollections` supports retryable reads.
-    public
-    typealias ExecutionPolicy = Mongo.Retry
+    public typealias ExecutionPolicy = Mongo.Retry
 
-    @inlinable public static
-    var type:Mongo.CommandType { .listCollections }
+    @inlinable public static var type: Mongo.CommandType { .listCollections }
 
-    public
-    typealias Response = Mongo.CursorBatch<Element>
+    public typealias Response = Mongo.CursorBatch<Element>
 }
-extension Mongo.ListCollections
-{
-    @frozen @usableFromInline
-    enum BuiltinKey:String, Sendable
-    {
+extension Mongo.ListCollections {
+    @frozen @usableFromInline enum BuiltinKey: String, Sendable {
         case nameOnly
         case cursor
     }
 }
-extension Mongo.ListCollections<Mongo.CollectionBinding>
-{
-    public
-    init(stride:Int)
-    {
+extension Mongo.ListCollections<Mongo.CollectionBinding> {
+    public init(stride: Int) {
         self.init(stride: stride, fields: Self.type(nil))
         ;
         {
@@ -70,24 +53,17 @@ extension Mongo.ListCollections<Mongo.CollectionBinding>
         } (&self.fields[BuiltinKey.self])
     }
 
-    @inlinable public
-    init(stride:Int, with populate:(inout Self) throws -> ()) rethrows
-    {
+    @inlinable public init(stride: Int, with populate: (inout Self) throws -> ()) rethrows {
         self.init(stride: stride)
         try populate(&self)
     }
 }
-extension Mongo.ListCollections<Mongo.CollectionMetadata>
-{
-    public
-    init(stride:Int)
-    {
+extension Mongo.ListCollections<Mongo.CollectionMetadata> {
+    public init(stride: Int) {
         self.init(stride: stride, fields: Self.type(nil))
         self.fields[BuiltinKey.self][.cursor] = Mongo.CursorOptions.init(batchSize: stride)
     }
-    @inlinable public
-    init(stride:Int, with populate:(inout Self) throws -> ()) rethrows
-    {
+    @inlinable public init(stride: Int, with populate: (inout Self) throws -> ()) rethrows {
         self.init(stride: stride)
         try populate(&self)
     }
@@ -95,30 +71,21 @@ extension Mongo.ListCollections<Mongo.CollectionMetadata>
 // FIXME: ListCollections *can* run on a secondary,
 // but *should* run on a primary.
 
-extension Mongo.ListCollections
-{
-    @inlinable public
-    subscript(key:AuthorizedCollections) -> Bool?
-    {
-        get
-        {
+extension Mongo.ListCollections {
+    @inlinable public subscript(key: AuthorizedCollections) -> Bool? {
+        get {
             nil
         }
-        set(value)
-        {
+        set(value) {
             value?.encode(to: &self.fields[with: key])
         }
     }
 
-    @inlinable public
-    subscript(key:Filter) -> Mongo.PredicateDocument?
-    {
-        get
-        {
+    @inlinable public subscript(key: Filter) -> Mongo.PredicateDocument? {
+        get {
             nil
         }
-        set(value)
-        {
+        set(value) {
             value?.encode(to: &self.fields[with: key])
         }
     }

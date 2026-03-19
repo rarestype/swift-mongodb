@@ -1,5 +1,4 @@
-extension Mongo
-{
+extension Mongo {
     /// A type that serves as a master coding model for a type of document in a MongoDB
     /// collection.
     ///
@@ -9,17 +8,12 @@ extension Mongo
     ///
     /// Occasionally, a master coding model shares a ``CodingKey`` type with a
     /// ``MasterCodingDelta`` type.
-    public
-    protocol MasterCodingModel<CodingKey>
-    {
-        associatedtype CodingKey:RawRepresentable<String>
+    public protocol MasterCodingModel<CodingKey> {
+        associatedtype CodingKey: RawRepresentable<String>
     }
 }
-extension Mongo.MasterCodingModel
-{
-    @inlinable public static
-    subscript(key:CodingKey) -> Mongo.AnyKeyPath
-    {
+extension Mongo.MasterCodingModel {
+    @inlinable public static subscript(key: CodingKey) -> Mongo.AnyKeyPath {
         .init(rawValue: key.rawValue)
     }
 }

@@ -1,10 +1,7 @@
 import BSON
 
-extension Mongo.ReadPreference
-{
-    @frozen public
-    enum Mode:String, Hashable, Sendable
-    {
+extension Mongo.ReadPreference {
+    @frozen public enum Mode: String, Hashable, Sendable {
         case primary
         case primaryPreferred
         case secondaryPreferred
@@ -12,6 +9,5 @@ extension Mongo.ReadPreference
         case nearest
     }
 }
-extension Mongo.ReadPreference.Mode:BSONDecodable, BSONEncodable
-{
+extension Mongo.ReadPreference.Mode: BSONDecodable, BSONEncodable {
 }

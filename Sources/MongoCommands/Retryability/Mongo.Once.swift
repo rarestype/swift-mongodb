@@ -1,7 +1,4 @@
-extension Mongo
-{
-    @frozen public
-    enum Once
-    {
+extension Mongo {
+    @frozen public enum Once {
     }
 }

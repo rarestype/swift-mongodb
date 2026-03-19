@@ -1,14 +1,11 @@
 import UnixTime
 
-extension Mongo
-{
-    struct Handshake:Sendable
-    {
-        let response:HelloResponse
-        let latency:Nanoseconds
+extension Mongo {
+    struct Handshake: Sendable {
+        let response: HelloResponse
+        let latency: Nanoseconds
 
-        init(response:HelloResponse, latency:Nanoseconds)
-        {
+        init(response: HelloResponse, latency: Nanoseconds) {
             self.response = response
             self.latency = latency
         }

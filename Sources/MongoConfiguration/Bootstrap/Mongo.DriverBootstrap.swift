@@ -2,46 +2,34 @@ import MongoClusters
 import NIOCore
 import UnixTime
 
-extension Mongo
-{
+extension Mongo {
     /// A driver configuration, which can be used to create session pools.
-    public
-    struct DriverBootstrap:Sendable
-    {
-        public
-        let credentials:Credentials?
-        public
-        let seeding:SeedingMethod
+    public struct DriverBootstrap: Sendable {
+        public let credentials: Credentials?
+        public let seeding: SeedingMethod
 
-        public
-        let executors:(any EventLoopGroup)?
+        public let executors: (any EventLoopGroup)?
 
-        public
-        let appname:String?
-        public
-        let connectionTimeout:Milliseconds
-        public
-        let connectionPoolSize:ClosedRange<Int>
-        public
-        let connectionPoolRate:Int
-        public
-        let monitorInterval:Milliseconds
-        public
-        let topology:TopologyHint?
+        public let appname: String?
+        public let connectionTimeout: Milliseconds
+        public let connectionPoolSize: ClosedRange<Int>
+        public let connectionPoolRate: Int
+        public let monitorInterval: Milliseconds
+        public let topology: TopologyHint?
 
-        public
-        let tls:TLS
+        public let tls: TLS
 
-        @inlinable
-        init<Login>(locator:some Mongo.ServiceLocator<Login>,
-            options:DriverOptions<Login.Authentication> = .init())
-            where Login:Mongo.LoginMode
-        {
-            let login:Login = .init(options.authentication)
+        @inlinable init<Login>(
+            locator: some Mongo.ServiceLocator<Login>,
+            options: DriverOptions<Login.Authentication> = .init()
+        )
+            where Login: Mongo.LoginMode {
+            let login: Login = .init(options.authentication)
 
             self.credentials = login.credentials(
                 userinfo: locator.userinfo,
-                database: locator.database)
+                database: locator.database
+            )
 
             self.seeding = locator.domains
 
@@ -54,8 +42,7 @@ extension Mongo
             self.monitorInterval = options.monitorInterval
             self.topology = options.topology
 
-            switch self.seeding
-            {
+            switch self.seeding {
             case .direct:
                 self.tls = options.tls ?? .disabled
 

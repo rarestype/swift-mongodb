@@ -1,24 +1,16 @@
-extension Mongo
-{
-    @frozen public
-    enum Topology<Owner> where Owner:AnyObject
-    {
+extension Mongo {
+    @frozen public enum Topology<Owner> where Owner: AnyObject {
         case unknown(Unknown)
         case single(Single)
         case sharded(Sharded)
         case replicated(Replicated)
     }
 }
-extension Mongo.Topology:Sendable where Owner:Sendable
-{
+extension Mongo.Topology: Sendable where Owner: Sendable {
 }
-extension Mongo.Topology
-{
-    public
-    init(from seedlist:Mongo.Seedlist, hint:Mongo.TopologyHint?)
-    {
-        switch hint
-        {
+extension Mongo.Topology {
+    public init(from seedlist: Mongo.Seedlist, hint: Mongo.TopologyHint?) {
+        switch hint {
         case .replicated(set: let name)?:
             self = .replicated(.init(from: seedlist, name: name))
 
@@ -27,83 +19,70 @@ extension Mongo.Topology
         }
     }
 }
-extension Mongo.Topology
-{
-    public mutating
-    func combine(update:Mongo.TopologyUpdate,
-        owner:consuming Owner?,
-        host:Mongo.Host,
-        add:(Mongo.Host) -> ()) -> Mongo.TopologyUpdateResult
-    {
-        switch consume self
-        {
+extension Mongo.Topology {
+    public mutating func combine(
+        update: Mongo.TopologyUpdate,
+        owner: consuming Owner?,
+        host: Mongo.Host,
+        add: (Mongo.Host) -> ()
+    ) -> Mongo.TopologyUpdateResult {
+        switch consume self {
         case .unknown(var unknown):
             guard
-            let owner:Owner
-            else
-            {
+            let owner: Owner else {
                 self = .unknown(unknown)
                 return .dropped
             }
 
-            switch update
-            {
+            switch update {
             //  https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst#updateunknownwithstandalone
             case .standalone(let metadata):
-                if  unknown.pick(host: host)
-                {
+                if  unknown.pick(host: host) {
                     self = .single(.init(host: host, metadata: metadata, owner: owner))
                     return .accepted
-                }
-                else
-                {
+                } else {
                     self = .unknown(unknown)
                     return .rejected
                 }
 
             case .router(let metadata):
-                var sharded:Sharded = .init(from: unknown)
-                defer
-                {
+                var sharded: Sharded = .init(from: unknown)
+                defer {
                     self = .sharded(sharded)
                 }
                 return sharded[host]?.assign(metadata: metadata, owner: owner) ?? .rejected
 
             case .primary(let primary, let peerlist):
-                var replicated:Replicated = .init(from: unknown, name: peerlist.set)
-                defer
-                {
+                var replicated: Replicated = .init(from: unknown, name: peerlist.set)
+                defer {
                     self = .replicated(replicated)
                 }
-                if  let metadata:Mongo.ReplicaSetMember = replicated.combine(update: primary,
+                if  let metadata: Mongo.ReplicaSetMember = replicated.combine(
+                        update: primary,
                         peerlist: peerlist,
                         host: host,
-                        add: add)
-                {
+                        add: add
+                    ) {
                     return replicated[host]?.assign(metadata: metadata, owner: owner)
                         ?? .rejected
-                }
-                else
-                {
+                } else {
                     return .rejected
                 }
 
             case .slave(let slave, let peerlist):
-                var replicated:Replicated = .init(from: unknown, name: peerlist.set)
-                defer
-                {
+                var replicated: Replicated = .init(from: unknown, name: peerlist.set)
+                defer {
                     self = .replicated(replicated)
                 }
-                if  let metadata:Mongo.ReplicaSetMember = replicated.combine(update: slave,
+                if  let metadata: Mongo.ReplicaSetMember = replicated.combine(
+                        update: slave,
                         peerlist: peerlist,
                         host: host,
-                        add: add)
-                {
+                        add: add
+                    ) {
                     return replicated[host]?.assign(metadata: metadata, owner: owner)
                         ?? .rejected
-                }
-                else
-                {
+                } else {
                     return .rejected
                 }
 
@@ -114,12 +93,10 @@ extension Mongo.Topology
             }
 
         case .single(var topology):
-            defer
-            {
+            defer {
                 self = .single(topology)
             }
-            switch update
-            {
+            switch update {
             case .standalone(let metadata):
                 return topology[host]?.assign(metadata: metadata, owner: owner) ?? .rejected
 
@@ -129,12 +106,10 @@ extension Mongo.Topology
             }
 
         case .sharded(var topology):
-            defer
-            {
+            defer {
                 self = .sharded(topology)
             }
-            switch update
-            {
+            switch update {
             case .router(let metadata):
                 return topology[host]?.assign(metadata: metadata, owner: owner) ?? .rejected
 
@@ -144,24 +119,26 @@ extension Mongo.Topology
             }
 
         case .replicated(var topology):
-            defer
-            {
+            defer {
                 self = .replicated(topology)
             }
 
-            let metadata:Mongo.ReplicaSetMember?
+            let metadata: Mongo.ReplicaSetMember?
 
-            switch update
-            {
+            switch update {
             case .primary(let primary, let peerlist):
-                metadata = topology.combine(update: primary, peerlist: peerlist,
+                metadata = topology.combine(
+                    update: primary, peerlist: peerlist,
                     host: host,
-                    add: add)
+                    add: add
+                )
 
             case .slave(let slave, let peerlist):
-                metadata = topology.combine(update: slave, peerlist: peerlist,
+                metadata = topology.combine(
+                    update: slave, peerlist: peerlist,
                     host: host,
-                    add: add)
+                    add: add
+                )
 
             case .ghost:
                 metadata = .ghost
@@ -172,44 +149,38 @@ extension Mongo.Topology
             }
 
             guard
-            let metadata:Mongo.ReplicaSetMember
-            else
-            {
+            let metadata: Mongo.ReplicaSetMember else {
                 return .rejected
             }
 
             return topology[host]?.assign(metadata: metadata, owner: owner) ?? .rejected
         }
     }
-    public mutating
-    func combine(error status:(any Error)?, host:Mongo.Host) -> Mongo.TopologyUpdateResult
-    {
-        switch consume self
-        {
+    public mutating func combine(
+        error status: (any Error)?,
+        host: Mongo.Host
+    ) -> Mongo.TopologyUpdateResult {
+        switch consume self {
         case .unknown(var seedlist):
-            defer
-            {
+            defer {
                 self = .unknown(seedlist)
             }
             return seedlist.combine(error: status, host: host)
 
         case .single(var topology):
-            defer
-            {
+            defer {
                 self = .single(topology)
             }
             return topology[host]?.assign(error: status) ?? .rejected
 
         case .sharded(var topology):
-            defer
-            {
+            defer {
                 self = .sharded(topology)
             }
             return topology[host]?.assign(error: status) ?? .rejected
 
         case .replicated(var topology):
-            defer
-            {
+            defer {
                 self = .replicated(topology)
             }
             return topology[host]?.assign(error: status) ?? .rejected

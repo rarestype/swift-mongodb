@@ -1,3 +1,2 @@
-extension Mongo.Explain:Mongo.ImplicitSessionCommand
-{
+extension Mongo.Explain: Mongo.ImplicitSessionCommand {
 }

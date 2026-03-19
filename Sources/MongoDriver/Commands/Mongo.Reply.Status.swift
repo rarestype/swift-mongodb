@@ -1,7 +1,6 @@
 import BSON
 
-extension Mongo.Reply
-{
+extension Mongo.Reply {
     /// A type that can decode a MongoDB status indicator.
     ///
     /// The following BSON values encode a “success” status (``ok`` is `true`):
@@ -19,31 +18,27 @@ extension Mongo.Reply
     /// -   [`.double(0.0)`]().
     ///
     /// All other BSON values will produce a decoding error.
-    struct Status:Equatable
-    {
-        let ok:Bool
+    struct Status: Equatable {
+        let ok: Bool
 
-        init(ok:Bool)
-        {
+        init(ok: Bool) {
             self.ok = ok
         }
     }
 }
-extension Mongo.Reply.Status:BSONDecodable
-{
-    init(bson:BSON.AnyValue) throws
-    {
-        self.init(ok: try bson.cast
-        {
-            switch $0
-            {
-            case .bool(true), .int32(1), .int64(1), .double(1.0):
-                true
-            case .bool(false), .int32(0), .int64(0), .double(0.0):
-                false
-            default:
-                nil
+extension Mongo.Reply.Status: BSONDecodable {
+    init(bson: BSON.AnyValue) throws {
+        self.init(
+            ok: try bson.cast {
+                switch $0 {
+                case .bool(true), .int32(1), .int64(1), .double(1.0):
+                    true
+                case .bool(false), .int32(0), .int64(0), .double(0.0):
+                    false
+                default:
+                    nil
+                }
             }
-        })
+        )
     }
 }

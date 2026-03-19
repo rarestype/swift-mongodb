@@ -2,38 +2,29 @@ import BSON
 import BSON_OrderedCollections
 import OrderedCollections
 
-extension Mongo.CollectionStats
-{
-    @frozen public
-    struct Storage:Sendable
-    {
+extension Mongo.CollectionStats {
+    @frozen public struct Storage: Sendable {
         /// The portion of ``storageSize`` that is available for reuse.
-        public
-        let storageFree:Int
+        public let storageFree: Int
         /// The total **compressed** size of all the documents in the collection.
-        public
-        let storageSize:Int
+        public let storageSize: Int
         /// The total **uncompressed** size of all the documents in the collection.
-        public
-        let logicalSize:Int
+        public let logicalSize: Int
         /// The total size of all the collection’s indexes.
-        public
-        let indexesSize:Int
+        public let indexesSize: Int
         /// The individual sizes of each of the collection’s indexes.
-        public
-        let indexSizes:OrderedDictionary<BSON.Key, Int>
+        public let indexSizes: OrderedDictionary<BSON.Key, Int>
         /// The number of documents in the collection.
-        public
-        let count:Int
+        public let count: Int
 
-        @inlinable public
-        init(storageFree:Int,
-            storageSize:Int,
-            logicalSize:Int,
-            indexesSize:Int,
-            indexSizes:OrderedDictionary<BSON.Key, Int>,
-            count:Int)
-        {
+        @inlinable public init(
+            storageFree: Int,
+            storageSize: Int,
+            logicalSize: Int,
+            indexesSize: Int,
+            indexSizes: OrderedDictionary<BSON.Key, Int>,
+            count: Int
+        ) {
             self.storageFree = storageFree
             self.storageSize = storageSize
             self.logicalSize = logicalSize
@@ -43,11 +34,8 @@ extension Mongo.CollectionStats
         }
     }
 }
-extension Mongo.CollectionStats.Storage:Mongo.MasterCodingModel
-{
-    @frozen public
-    enum CodingKey:String, Sendable, CaseIterable
-    {
+extension Mongo.CollectionStats.Storage: Mongo.MasterCodingModel {
+    @frozen public enum CodingKey: String, Sendable, CaseIterable {
         case storageFree = "freeStorageSize"
         case storageSize = "storageSize"
         case logicalSize = "size"
@@ -56,17 +44,15 @@ extension Mongo.CollectionStats.Storage:Mongo.MasterCodingModel
         case count
     }
 }
-extension Mongo.CollectionStats.Storage:BSONDocumentDecodable
-{
-    @inlinable public
-    init(bson:BSON.DocumentDecoder<CodingKey>) throws
-    {
+extension Mongo.CollectionStats.Storage: BSONDocumentDecodable {
+    @inlinable public init(bson: BSON.DocumentDecoder<CodingKey>) throws {
         self.init(
             storageFree: try bson[.storageFree]?.decode() ?? 0,
             storageSize: try bson[.storageSize].decode(),
             logicalSize: try bson[.logicalSize].decode(),
             indexesSize: try bson[.indexesSize].decode(),
             indexSizes: try bson[.indexSizes].decode(),
-            count: try bson[.count].decode())
+            count: try bson[.count].decode()
+        )
     }
 }

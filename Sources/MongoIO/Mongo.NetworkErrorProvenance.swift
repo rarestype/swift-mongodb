@@ -1,8 +1,5 @@
-extension Mongo
-{
-    @frozen public
-    enum NetworkErrorProvenance:Equatable, Sendable
-    {
+extension Mongo {
+    @frozen public enum NetworkErrorProvenance: Equatable, Sendable {
         case crosscancellation
     }
 }

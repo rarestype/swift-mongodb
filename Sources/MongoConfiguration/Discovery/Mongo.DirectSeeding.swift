@@ -1,19 +1,13 @@
 import MongoClusters
 
-extension Mongo
-{
+extension Mongo {
     /// Under this discovery mode, the driver will use a predefined list
     /// of MongoDB servers to connect to a deployment.
-    @frozen public
-    enum DirectSeeding
-    {
+    @frozen public enum DirectSeeding {
     }
 }
-extension Mongo.DirectSeeding:Mongo.DiscoveryMode
-{
-    @inlinable public static
-    subscript(seedlist:Mongo.Seedlist) -> Mongo.SeedingMethod
-    {
+extension Mongo.DirectSeeding: Mongo.DiscoveryMode {
+    @inlinable public static subscript(seedlist: Mongo.Seedlist) -> Mongo.SeedingMethod {
         .direct(seedlist)
     }
 }

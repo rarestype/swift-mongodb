@@ -1,8 +1,5 @@
-extension Mongo
-{
-    @frozen public
-    enum TopologyUpdateResult:Sendable
-    {
+extension Mongo {
+    @frozen public enum TopologyUpdateResult: Sendable {
         /// The update was incorporated into the topology. The initiator of the update should
         /// continue monitoring the relevant server, even if the purpose of the update was to
         /// invalidate the server.

@@ -2,8 +2,7 @@ import BSON
 import MongoExecutor
 import MongoWire
 
-extension MongoExecutor
-{
+extension MongoExecutor {
     /// Encodes the given command to a document, adding the given database as a field with the
     /// key `"$db"`, sends it over this channel, and awaits its reply.
     ///
@@ -16,30 +15,32 @@ extension MongoExecutor
     /// executing, this method will not close the channel or send anything over it.
     ///
     /// In all other scenarios, the channel will be closed on failure.
-    func run<Command>(command:__owned Command,
-        against database:Mongo.Database,
-        by deadline:ContinuousClock.Instant) async throws -> Mongo.Reply
-        where Command:BSONDocumentEncodable
-    {
+    func run<Command>(
+        command: __owned Command,
+        against database: Mongo.Database,
+        by deadline: ContinuousClock.Instant
+    ) async throws -> Mongo.Reply
+        where Command: BSONDocumentEncodable {
         try Task.checkCancellation()
 
-        let now:ContinuousClock.Instant = .now
-        let sections:Mongo.WireMessage.Sections
+        let now: ContinuousClock.Instant = .now
+        let sections: Mongo.WireMessage.Sections
 
-        guard now < deadline
-        else
-        {
+        guard now < deadline else {
             throw Mongo.DriverTimeoutError.init()
         }
 
 
-        var document:BSON.Document = .init(encoding: command)
-            document[BSON.Key.self]["$db"] = database.name
+        var document: BSON.Document = .init(encoding: command)
+        document[BSON.Key.self]["$db"] = database.name
 
         sections = .init(body: document)
 
-        return try .init(message: try await self.request(
-            sections: sections,
-            deadline: deadline))
+        return try .init(
+            message: try await self.request(
+                sections: sections,
+                deadline: deadline
+            )
+        )
     }
 }

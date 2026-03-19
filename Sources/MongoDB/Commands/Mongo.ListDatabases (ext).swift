@@ -1,3 +1,2 @@
-extension Mongo.ListDatabases:Mongo.ImplicitSessionCommand
-{
+extension Mongo.ListDatabases: Mongo.ImplicitSessionCommand {
 }

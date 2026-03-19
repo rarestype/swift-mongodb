@@ -2,28 +2,19 @@ import BSON
 import MongoWire
 import NIOCore
 
-extension Mongo
-{
-    public final
-    class WireMessageRouter
-    {
-        private
-        var request:Mongo.WireMessageIdentifier
-        private
-        var state:State
+extension Mongo {
+    public final class WireMessageRouter {
+        private var request: Mongo.WireMessageIdentifier
+        private var state: State
 
-        public
-        init()
-        {
+        public init() {
             // MongoDB uses 0 as the ‘nil’ id.
             self.request = .none
             self.state = .awaiting(nil)
         }
 
-        deinit
-        {
-            if  case .awaiting(_?) = self.state
-            {
+        deinit {
+            if  case .awaiting(_?) = self.state {
                 fatalError("""
                     unreachable (deinitialized channel handler while a continuation is still \
                     awaiting)
@@ -32,12 +23,9 @@ extension Mongo
         }
     }
 }
-extension Mongo.WireMessageRouter
-{
-    func perish(throwing error:any Error)
-    {
-        switch self.state
-        {
+extension Mongo.WireMessageRouter {
+    func perish(throwing error: any Error) {
+        switch self.state {
         case .awaiting(let caller?):
             caller.fail(error)
             self.state = .perished(nil)
@@ -50,24 +38,16 @@ extension Mongo.WireMessageRouter
         }
     }
 }
-extension Mongo.WireMessageRouter:ChannelInboundHandler
-{
-    public
-    typealias InboundIn = Mongo.WireMessage
-    public
-    typealias InboundOut = Never
+extension Mongo.WireMessageRouter: ChannelInboundHandler {
+    public typealias InboundIn = Mongo.WireMessage
+    public typealias InboundOut = Never
 
-    public
-    func channelRead(context:ChannelHandlerContext, data:NIOAny)
-    {
-        let message:Mongo.WireMessage = self.unwrapInboundIn(data)
+    public func channelRead(context: ChannelHandlerContext, data: NIOAny) {
+        let message: Mongo.WireMessage = self.unwrapInboundIn(data)
 
-        switch self.state
-        {
+        switch self.state {
         case .awaiting(let caller?):
-            guard self.request == message.header.request
-            else
-            {
+            guard self.request == message.header.request else {
                 fallthrough
             }
 
@@ -76,58 +56,61 @@ extension Mongo.WireMessageRouter:ChannelInboundHandler
 
         case .awaiting(nil):
             self.state = .perished(nil)
-            context.fireErrorCaught(Mongo.WireMessageRoutingError.init(
-                unknown: message.header.request))
+            context.fireErrorCaught(
+                Mongo.WireMessageRoutingError.init(
+                    unknown: message.header.request
+                )
+            )
 
         case .perished:
             break
         }
     }
-    public
-    func channelInactive(context:ChannelHandlerContext)
-    {
-        self.perish(throwing: Mongo.NetworkError.init(
-            underlying: Mongo.WireProtocolError.interrupted))
+    public func channelInactive(context: ChannelHandlerContext) {
+        self.perish(
+            throwing: Mongo.NetworkError.init(
+                underlying: Mongo.WireProtocolError.interrupted
+            )
+        )
 
         context.fireChannelInactive()
     }
-    public
-    func errorCaught(context:ChannelHandlerContext, error:any Error)
-    {
+    public func errorCaught(context: ChannelHandlerContext, error: any Error) {
         self.perish(throwing: Mongo.NetworkError.init(underlying: error))
 
         context.fireErrorCaught(error)
     }
 }
-extension Mongo.WireMessageRouter:ChannelOutboundHandler
-{
-    public
-    typealias OutboundIn = Mongo.WireAction
-    public
-    typealias OutboundOut = ByteBuffer
+extension Mongo.WireMessageRouter: ChannelOutboundHandler {
+    public typealias OutboundIn = Mongo.WireAction
+    public typealias OutboundOut = ByteBuffer
 
-    public
-    func write(context:ChannelHandlerContext, data:NIOAny, promise:EventLoopPromise<Void>?)
-    {
-        switch self.unwrapOutboundIn(data)
-        {
+    public func write(
+        context: ChannelHandlerContext,
+        data: NIOAny,
+        promise: EventLoopPromise<Void>?
+    ) {
+        switch self.unwrapOutboundIn(data) {
         case .cancel(let error):
             self.perish(throwing: error)
 
             context.channel.close(mode: .all, promise: nil)
 
         case .request(let command, let caller):
-            let request:Mongo.WireMessageIdentifier = self.request.next()
-            let message:Mongo.WireMessage = .init(
+            let request: Mongo.WireMessageIdentifier = self.request.next()
+            let message: Mongo.WireMessage = .init(
                 sections: command,
                 checksum: false,
-                id: request)
+                id: request
+            )
 
-            switch self.state
-            {
+            switch self.state {
             case .perished:
-                caller.fail(Mongo.NetworkError.init(
-                    underlying: Mongo.WireProtocolError.interruptedAlready))
+                caller.fail(
+                    Mongo.NetworkError.init(
+                        underlying: Mongo.WireProtocolError.interruptedAlready
+                    )
+                )
                 return
 
             case .awaiting(_?):
@@ -137,13 +120,16 @@ extension Mongo.WireMessageRouter:ChannelOutboundHandler
                 self.state = .awaiting(caller)
             }
 
-            var output:Mongo.WireMessageEncoder = .init(
-                buffer: context.channel.allocator.buffer(capacity: .init(message.header.size)))
+            var output: Mongo.WireMessageEncoder = .init(
+                buffer: context.channel.allocator.buffer(capacity: .init(message.header.size))
+            )
 
             output += message
 
-            context.writeAndFlush(self.wrapOutboundOut(output.buffer),
-                promise: promise)
+            context.writeAndFlush(
+                self.wrapOutboundOut(output.buffer),
+                promise: promise
+            )
         }
     }
 }

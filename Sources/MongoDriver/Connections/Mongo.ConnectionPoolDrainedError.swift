@@ -1,38 +1,25 @@
 import MongoClusters
 import TraceableErrors
 
-extension Mongo
-{
-    public
-    struct ConnectionPoolDrainedError:Error
-    {
-        public
-        let underlying:any Error
-        public
-        let host:Host
+extension Mongo {
+    public struct ConnectionPoolDrainedError: Error {
+        public let underlying: any Error
+        public let host: Host
 
-        public
-        init(because error:any Error, host:Host)
-        {
+        public init(because error: any Error, host: Host) {
             self.underlying = error
             self.host = host
         }
     }
 }
-extension Mongo.ConnectionPoolDrainedError:Equatable
-{
-    public static
-    func == (lhs:Self, rhs:Self) -> Bool
-    {
+extension Mongo.ConnectionPoolDrainedError: Equatable {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.host == rhs.host &&
         lhs.underlying == rhs.underlying
     }
 }
-extension Mongo.ConnectionPoolDrainedError:TraceableError
-{
-    public
-    var notes:[String]
-    {
+extension Mongo.ConnectionPoolDrainedError: TraceableError {
+    public var notes: [String] {
         [
             """
             while filling connection pool for '\(self.host)'
@@ -40,8 +27,6 @@ extension Mongo.ConnectionPoolDrainedError:TraceableError
         ]
     }
 }
-extension Mongo.ConnectionPoolDrainedError:Mongo.RetryableError
-{
-    public
-    var isRetryable:Bool { true }
+extension Mongo.ConnectionPoolDrainedError: Mongo.RetryableError {
+    public var isRetryable: Bool { true }
 }

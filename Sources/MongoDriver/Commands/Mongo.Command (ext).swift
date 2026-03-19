@@ -3,70 +3,62 @@ import MongoCommands
 import MongoWire
 import UnixTime
 
-extension Mongo.Command
-{
+extension Mongo.Command {
     /// Indicates if this command autocommits, meaning it supports
     /// retryable writes.
-    @inlinable public static
-    var autocommits:Bool
-    {
+    @inlinable public static var autocommits: Bool {
         WriteConcern.self is Mongo.WriteConcern.Type &&
         ExecutionPolicy.self is Mongo.Retry.Type
     }
 }
-extension Mongo.Command
-{
+extension Mongo.Command {
     /// Encodes this command to a BSON document, adding the given database as a field with the
     /// key `"$db"`.
-    @usableFromInline __consuming
-    func encode(database:Database,
-        labels:Mongo.SessionLabels?,
-        by deadline:ContinuousClock.Instant) -> Mongo.WireMessage.Sections?
-    {
+    @usableFromInline __consuming func encode(
+        database: Database,
+        labels: Mongo.SessionLabels?,
+        by deadline: ContinuousClock.Instant
+    ) -> Mongo.WireMessage.Sections? {
         // do this first, so we never have to access `self` after reading `self.fields`
-        let outlined:[Mongo.WireMessage.Outline]? = self.outline.map
-        {
+        let outlined: [Mongo.WireMessage.Outline]? = self.outline.map {
             [.init(id: $0.type.rawValue, slice: $0.bson.bytes[...])]
         }
 
-        let now:ContinuousClock.Instant = .now
+        let now: ContinuousClock.Instant = .now
 
-        guard now < deadline
-        else
-        {
+        guard now < deadline else {
             return nil
         }
 
-        let timeout:Milliseconds?
+        let timeout: Milliseconds?
 
-        switch self.timeout
-        {
+        switch self.timeout {
         case .computed: timeout = .init(truncating: now.duration(to: deadline))
         case .omitted:  timeout = nil
         }
 
-        let body:BSON.Document = self.body(database: database,
+        let body: BSON.Document = self.body(
+            database: database,
             timeout: timeout,
-            labels: labels)
+            labels: labels
+        )
 
         return .init(body: body, outlined: outlined ?? [])
     }
 
-    private consuming
-    func body(database:Database,
-        timeout:Milliseconds?,
-        labels:Mongo.SessionLabels?) -> BSON.Document
-    {
-        var bson:BSON.Document = self.fields
+    private consuming func body(
+        database: Database,
+        timeout: Milliseconds?,
+        labels: Mongo.SessionLabels?
+    ) -> BSON.Document {
+        var bson: BSON.Document = self.fields
         ;
         {
             $0["$db"] = database.name
             $0["maxTimeMS"] = timeout
 
             guard
-            let labels:Mongo.SessionLabels
-            else
-            {
+            let labels: Mongo.SessionLabels else {
                 return
             }
 
@@ -76,8 +68,7 @@ extension Mongo.Command
             $0["writeConcern"] = labels.writeConcern
             $0["lsid"] = labels.session
 
-            switch labels.transaction
-            {
+            switch labels.transaction {
             case nil:
                 break
 

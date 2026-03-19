@@ -1,7 +1,5 @@
-extension Mongo.ReadConcern
-{
-    var level:Level
-    {
+extension Mongo.ReadConcern {
+    var level: Level {
         .ratification(self)
     }
 }

@@ -1,39 +1,34 @@
 import UnixTime
 
-extension Mongo
-{
-    struct Listener:Sendable
-    {
-        private
-        let connection:Connection
+extension Mongo {
+    struct Listener: Sendable {
+        private let connection: Connection
 
-        private
-        let interval:Milliseconds,
-            seed:TopologyVersion
+        private let interval: Milliseconds,
+        seed: TopologyVersion
 
-        init(connection:Connection,
-            interval:Milliseconds,
-            seed:TopologyVersion)
-        {
+        init(
+            connection: Connection,
+            interval: Milliseconds,
+            seed: TopologyVersion
+        ) {
             self.connection = connection
             self.interval = interval
             self.seed = seed
         }
     }
 }
-extension Mongo.Listener
-{
-    func start(alongside pool:Mongo.ConnectionPool,
-        updating stream:AsyncThrowingStream<Mongo.MonitorPool.Update, any Error>.Continuation)
-        async
-    {
-        var version:Mongo.TopologyVersion = self.seed
-        do
-        {
-            while true
-            {
-                let response:Mongo.HelloResponse = try await self.connection.run(
-                    hello: .init(topologyVersion: version, milliseconds: self.interval))
+extension Mongo.Listener {
+    func start(
+        alongside pool: Mongo.ConnectionPool,
+        updating stream: AsyncThrowingStream<Mongo.MonitorPool.Update, any Error>.Continuation
+    ) async {
+        var version: Mongo.TopologyVersion = self.seed
+        do {
+            while true {
+                let response: Mongo.HelloResponse = try await self.connection.run(
+                    hello: .init(topologyVersion: version, milliseconds: self.interval)
+                )
 
                 version = response.topologyVersion
 
@@ -41,9 +36,7 @@ extension Mongo.Listener
 
                 stream.yield(.init(topology: response.topologyUpdate))
             }
-        }
-        catch let error
-        {
+        } catch let error {
             pool.monitor.resume(from: .listener)
             pool.log(event: Event.errored(error))
 

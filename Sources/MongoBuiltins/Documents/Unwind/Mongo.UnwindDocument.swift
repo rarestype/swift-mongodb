@@ -1,44 +1,29 @@
 import BSON
 import MongoABI
 
-extension Mongo
-{
-    @frozen public
-    struct UnwindDocument:Mongo.EncodableDocument, Sendable
-    {
-        public
-        var bson:BSON.Document
+extension Mongo {
+    @frozen public struct UnwindDocument: Mongo.EncodableDocument, Sendable {
+        public var bson: BSON.Document
 
-        @inlinable public
-        init(_ bson:BSON.Document)
-        {
+        @inlinable public init(_ bson: BSON.Document) {
             self.bson = bson
         }
     }
 }
-extension Mongo.UnwindDocument
-{
-    @inlinable public
-    subscript(key:Field) -> Mongo.AnyKeyPath?
-    {
-        get
-        {
+extension Mongo.UnwindDocument {
+    @inlinable public subscript(key: Field) -> Mongo.AnyKeyPath? {
+        get {
             nil
         }
-        set(value)
-        {
+        set(value) {
             value?.stem.encode(to: &self.bson[with: key])
         }
     }
-    @inlinable public
-    subscript(key:PreserveNullAndEmptyArrays) -> Bool?
-    {
-        get
-        {
+    @inlinable public subscript(key: PreserveNullAndEmptyArrays) -> Bool? {
+        get {
             nil
         }
-        set(value)
-        {
+        set(value) {
             value?.encode(to: &self.bson[with: key])
         }
     }

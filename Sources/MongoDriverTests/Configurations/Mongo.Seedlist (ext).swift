@@ -1,14 +1,11 @@
 import MongoConfiguration
 
-extension Mongo.Seedlist
-{
-    static var standalone:Self
-    {
+extension Mongo.Seedlist {
+    static var standalone: Self {
         ["mongo-single": 27017]
     }
-    static var replicated:Self
-    {
-         [
+    static var replicated: Self {
+        [
             "mongo-0": 27017,
             "mongo-1": 27017,
             "mongo-2": 27017,

@@ -1,3 +1,2 @@
-extension Mongo.Update:Mongo.ImplicitSessionCommand, Mongo.TransactableCommand
-{
+extension Mongo.Update: Mongo.ImplicitSessionCommand, Mongo.TransactableCommand {
 }

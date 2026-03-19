@@ -1,15 +1,11 @@
 import BSON
 
-extension Mongo
-{
-    @frozen public
-    enum UpdateBitwiseOperator:String, Equatable, Hashable, Sendable
-    {
+extension Mongo {
+    @frozen public enum UpdateBitwiseOperator: String, Equatable, Hashable, Sendable {
         case and
         case or
         case xor
     }
 }
-extension Mongo.UpdateBitwiseOperator:BSONDecodable, BSONEncodable
-{
+extension Mongo.UpdateBitwiseOperator: BSONDecodable, BSONEncodable {
 }

@@ -21,19 +21,18 @@ import NIOCore
 import NIOPosix
 import MongoDB
 
-let executors:MultiThreadedEventLoopGroup = .init(numberOfThreads: 2)
+let executors: MultiThreadedEventLoopGroup = .init(numberOfThreads: 2)
 
-let bootstrap:Mongo.DriverBootstrap = MongoDB / ["mongo-0", "mongo-1"] /?
-{
+let bootstrap: Mongo.DriverBootstrap = MongoDB / ["mongo-0", "mongo-1"] /? {
     $0.executors = MultiThreadedEventLoopGroup.singleton
     $0.appname = "example app"
 }
 
-let configuration:Mongo.ReplicaSetConfiguration = try await bootstrap.withSessionPool
-{
+let configuration: Mongo.ReplicaSetConfiguration = try await bootstrap.withSessionPool {
     try await $0.run(
         command: Mongo.ReplicaSetGetConfiguration.init(),
-        against: .admin)
+        against: .admin
+    )
 }
 
 print(configuration)

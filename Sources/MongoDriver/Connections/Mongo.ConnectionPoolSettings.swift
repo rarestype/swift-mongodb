@@ -1,20 +1,13 @@
-extension Mongo
-{
-    @frozen public
-    struct ConnectionPoolSettings:Equatable, Sendable
-    {
+extension Mongo {
+    @frozen public struct ConnectionPoolSettings: Equatable, Sendable {
         /// The target size of a connection pool. The pool will attempt to expand
         /// until it contains at least the minimum number of connections, and it will
         /// never exceed the maximum connection count.
-        public
-        let size:ClosedRange<Int>
+        public let size: ClosedRange<Int>
         /// The maximum number of connections a pool can establish concurrently.
-        public
-        let rate:Int
+        public let rate: Int
 
-        public
-        init(size:ClosedRange<Int>, rate:Int)
-        {
+        public init(size: ClosedRange<Int>, rate: Int) {
             self.size = size
             self.rate = rate
         }

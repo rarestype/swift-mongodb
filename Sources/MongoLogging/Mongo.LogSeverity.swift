@@ -1,10 +1,7 @@
 import Atomics
 
-extension Mongo
-{
-    @frozen public
-    enum LogSeverity:UInt8, Sendable
-    {
+extension Mongo {
+    @frozen public enum LogSeverity: UInt8, Sendable {
         case debug
         case error
 
@@ -13,11 +10,8 @@ extension Mongo
         case fatal
     }
 }
-extension Mongo.LogSeverity:AtomicValue
-{
+extension Mongo.LogSeverity: AtomicValue {
 }
-extension Mongo.LogSeverity:Comparable
-{
-    @inlinable public static
-    func < (a:Self, b:Self) -> Bool { a.rawValue < b.rawValue }
+extension Mongo.LogSeverity: Comparable {
+    @inlinable public static func < (a: Self, b: Self) -> Bool { a.rawValue < b.rawValue }
 }

@@ -1,17 +1,13 @@
 import BSON
 
-extension Mongo
-{
-    public
-    protocol ModificationEffect
-    {
-        associatedtype ID:BSONDecodable & Sendable
-        associatedtype Value:BSONDecodable & Sendable
+extension Mongo {
+    public protocol ModificationEffect {
+        associatedtype ID: BSONDecodable & Sendable
+        associatedtype Value: BSONDecodable & Sendable
 
-        associatedtype Phase:ModificationPhase
-        associatedtype Upsert:BSONEncodable
+        associatedtype Phase: ModificationPhase
+        associatedtype Upsert: BSONEncodable
 
-        static
-        var upsert:Upsert { get }
+        static var upsert: Upsert { get }
     }
 }

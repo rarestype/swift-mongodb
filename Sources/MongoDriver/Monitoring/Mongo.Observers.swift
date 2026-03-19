@@ -1,19 +1,13 @@
-extension Mongo
-{
-    enum Observers
-    {
+extension Mongo {
+    enum Observers {
         case none
         case one(CheckedContinuation<Void, Never>)
         case many([CheckedContinuation<Void, Never>])
     }
 }
-extension Mongo.Observers
-{
-    mutating
-    func append(_ observer:CheckedContinuation<Void, Never>)
-    {
-        switch self
-        {
+extension Mongo.Observers {
+    mutating func append(_ observer: CheckedContinuation<Void, Never>) {
+        switch self {
         case .none:
             self = .one(observer)
         case .one(let first):
@@ -24,22 +18,17 @@ extension Mongo.Observers
             self = .many(list)
         }
     }
-    mutating
-    func resume()
-    {
-        defer
-        {
+    mutating func resume() {
+        defer {
             self = .none
         }
-        switch self
-        {
+        switch self {
         case .none:
             return
         case .one(let observer):
             observer.resume()
         case .many(let observers):
-            for observer:CheckedContinuation<Void, Never> in observers
-            {
+            for observer: CheckedContinuation<Void, Never> in observers {
                 observer.resume()
             }
         }
