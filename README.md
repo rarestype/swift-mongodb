@@ -70,10 +70,6 @@ Rarest packages:
 
 Other packages:
 
-1.  [`apple/swift-atomics`](https://github.com/apple/swift-atomics)
-
-    Rationale: this package provides atomic types that improve the performance of the driver’s various concurrent data structures.
-
 1.  [`apple/swift-collections`](https://github.com/apple/swift-collections)
 
     Rationale: this package provides data structures that improve the runtime complexity of several algorithms the driver uses internally. Moreover, the driver’s `swift-nio` dependency already depends on one of this package’s modules (`DequeModule`) anyway.
