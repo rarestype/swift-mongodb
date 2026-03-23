@@ -1,5 +1,7 @@
-name: tests
+name: Tests
 
+permissions:
+    contents: write
 on:
     push:
         branches: [ master ]
@@ -28,9 +30,8 @@ jobs:
         outputs:
             code_changed: ${{ steps.changes.outputs.any_changed }}
 
-    linux:
+    Linux:
         runs-on: ubuntu-24.04
-        name: Linux
         needs: changes
         if: ${{ needs.changes.outputs.code_changed == 'true' }}
         steps:
@@ -62,9 +63,12 @@ jobs:
                         swift:6.2.4-noble \
                         /bin/bash Scripts/TestAll
 
-    macos:
+            -   name: 💖 Update badge 💖
+                uses: rarestype/rarestbadge@v1
+                if: always()
+
+    macOS:
         runs-on: macos-26
-        name: macOS
         needs: changes
         if: ${{ needs.changes.outputs.code_changed == 'true' }}
         steps:
@@ -83,3 +87,7 @@ jobs:
                 run: |
                     swift --version
                     swift build
+
+            -   name: 💖 Update badge 💖
+                uses: rarestype/rarestbadge@v1
+                if: always()

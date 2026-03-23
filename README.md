@@ -14,12 +14,8 @@ a foundation-free, pure swift mongodb driver
 
 This package requires Swift 6.0 or greater.
 
-| Platform | Status |
-| -------- | ------ |
-| 💬 Documentation | [![Documentation](https://github.com/rarestype/swift-mongodb/actions/workflows/Documentation.yml/badge.svg)](https://github.com/rarestype/swift-mongodb/actions/workflows/Documentation.yml) |
-| 🐧 Linux | [![Tests](https://github.com/rarestype/swift-mongodb/actions/workflows/Tests.yml/badge.svg)](https://github.com/rarestype/swift-mongodb/actions/workflows/Tests.yml) |
-| 🍏 Darwin | [![Tests](https://github.com/rarestype/swift-mongodb/actions/workflows/Tests.yml/badge.svg)](https://github.com/rarestype/swift-mongodb/actions/workflows/Tests.yml) |
-
+<!-- DO NOT EDIT BELOW! AUTOSYNC CONTENT [STATUS TABLE] -->
+<!-- DO NOT EDIT ABOVE! AUTOSYNC CONTENT [STATUS TABLE] -->
 
 ## getting started
 
