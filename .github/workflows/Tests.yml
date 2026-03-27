@@ -60,7 +60,7 @@ jobs:
                         --user root \
                         -v $PWD:/swift-mongodb \
                         -w /swift-mongodb \
-                        swift:6.2.4-noble \
+                        swift:noble \
                         /bin/bash Scripts/TestAll
 
             -   name: 💖 Update badge 💖
