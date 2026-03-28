@@ -19,7 +19,7 @@ let package: Package = .init(
         .package(url: "https://github.com/rarestype/swift-bson", from: "2.0.2"),
         .package(url: "https://github.com/rarestype/h", from: "1.0.0"),
         .package(url: "https://github.com/rarestype/u", from: "1.1.0"),
-        .package(url: "https://github.com/rarestype/gram", from: "1.0.0"),
+        .package(url: "https://github.com/rarestype/gram", from: "1.1.0"),
 
         .package(url: "https://github.com/apple/swift-collections", from: "1.1.0"),
         .package(url: "https://github.com/apple/swift-nio", from: "2.79.0"),

@@ -15,7 +15,7 @@ extension Mongo {
 extension Mongo.ConnectionPoolDrainedError: Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.host == rhs.host &&
-        lhs.underlying == rhs.underlying
+        lhs.underlying ~= rhs.underlying
     }
 }
 extension Mongo.ConnectionPoolDrainedError: TraceableError {
