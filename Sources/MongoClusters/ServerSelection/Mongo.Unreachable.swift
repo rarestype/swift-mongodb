@@ -13,7 +13,7 @@ extension Mongo.Unreachable: Equatable {
         case (.queued, .queued):
             true
         case (.errored(let lhs), .errored(let rhs)):
-            lhs == rhs
+            lhs ~= rhs
         case (_, _):
             false
         }

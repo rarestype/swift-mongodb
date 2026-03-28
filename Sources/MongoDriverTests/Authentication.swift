@@ -15,7 +15,7 @@ import Testing
 
     static var login: (String, String) { (Self.username, Self.password) }
 
-    @Test func defaulted() async throws {
+    @Test func Defaulted() async throws {
         let bootstrap: Mongo.DriverBootstrap = mongodb / Self.login * self.seedlist /? {
             $0.executors = MultiThreadedEventLoopGroup.singleton
         }
@@ -25,7 +25,7 @@ import Testing
         }
     }
 
-    @Test func scramSHA256() async throws {
+    @Test func ScramSHA256() async throws {
         let bootstrap: Mongo.DriverBootstrap = mongodb / Self.login * self.seedlist /? {
             $0.authentication = .sasl(.sha256)
             $0.executors = MultiThreadedEventLoopGroup.singleton
@@ -36,7 +36,7 @@ import Testing
         }
     }
 
-    @Test func unsupported() async throws {
+    @Test func Unsupported() async throws {
         let bootstrap: Mongo.DriverBootstrap = mongodb / Self.login * self.seedlist /? {
             $0.connectionTimeout = .milliseconds(500)
             $0.authentication = .x509
@@ -58,7 +58,7 @@ import Testing
         }
     }
 
-    @Test func wrongPassword() async throws {
+    @Test func WrongPassword() async throws {
         let bootstrap: Mongo.DriverBootstrap =
         mongodb / (Self.username, "1234") * self.seedlist /? {
             $0.connectionTimeout = .milliseconds(500)

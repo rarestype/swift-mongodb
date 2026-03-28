@@ -15,7 +15,7 @@ extension Mongo {
 extension Mongo.AuthenticationError: Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.credentials == rhs.credentials &&
-        lhs.underlying == rhs.underlying
+        lhs.underlying ~= rhs.underlying
     }
 }
 extension Mongo.AuthenticationError: TraceableError {

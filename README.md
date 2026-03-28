@@ -50,6 +50,31 @@ print(configuration)
 //  ...
 ```
 
+## developing swift-mongodb
+
+Development environments for MongoDB drivers can be challenging to set up. The easiest way to work on swift-mongodb is to use Docker. This repository contains some configurations to help you get started.
+
+```bash
+# launch a cluster of Docker containers, each hosting a `mongod` instance
+docker compose -f .github/mongonet/docker-compose.yml up -d
+docker exec -t mongonet-mongo-0-1 /bin/mongosh --file /create-replica-set.js
+```
+
+Importantly, your *own* devcontainer must be connected to the cluster’s Docker network (`mongonet`).
+
+```yaml
+services:
+    your-vscode-container:
+        image: your-devcontainer-image
+        hostname: vscode
+        networks:
+            - mongonet
+
+networks:
+    mongonet:
+        external: true
+```
+
 ## license and acknowledgements
 
 This library is Apache 2.0 licensed. It originally began as a re-write of [*MongoKitten*](https://github.com/orlandos-nl/MongoKitten) by [Joannis Orlandos](https://github.com/Joannis) and [Robbert Brandsma](https://github.com/Obbut).
