@@ -16,12 +16,12 @@ let package: Package = .init(
     dependencies: [
         .package(url: "https://github.com/ordo-one/dollup", from: "1.0.1"),
 
-        .package(url: "https://github.com/rarestype/swift-bson", from: "2.0.2"),
+        .package(url: "https://github.com/rarestype/swift-bson", from: "2.1.0"),
         .package(url: "https://github.com/rarestype/h", from: "1.0.0"),
         .package(url: "https://github.com/rarestype/u", from: "1.1.0"),
-        .package(url: "https://github.com/rarestype/gram", from: "1.1.0"),
+        .package(url: "https://github.com/rarestype/gram", from: "2.0.0"),
 
-        .package(url: "https://github.com/apple/swift-collections", from: "1.1.0"),
+        .package(url: "https://github.com/apple/swift-collections", from: "1.4.1"),
         .package(url: "https://github.com/apple/swift-nio", from: "2.79.0"),
         .package(url: "https://github.com/apple/swift-nio-ssl", from: "2.28.0"),
     ],
