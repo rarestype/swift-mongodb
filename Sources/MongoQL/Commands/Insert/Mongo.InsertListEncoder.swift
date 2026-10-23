@@ -13,11 +13,11 @@ extension Mongo.InsertListEncoder {
     @inlinable internal consuming func move() -> BSON.Output { self.output }
 }
 extension Mongo.InsertListEncoder {
-    @inlinable public static func += (
+    @inlinable public static func += <Element>(
         self: inout Self,
-        elements: some Sequence<some BSONDocumentEncodable>
-    ) {
-        for element: some BSONDocumentEncodable in elements {
+        elements: some Sequence<Element>
+    ) where Element: BSONDocumentEncodable {
+        for element: Element in elements {
             self.append(element)
         }
     }
