@@ -6,5 +6,4 @@ extension Mongo {
         case one = 1
     }
 }
-extension Mongo.DeleteLimit: BSONDecodable, BSONEncodable {
-}
+extension Mongo.DeleteLimit: BSONDecodable, BSONEncodable {}

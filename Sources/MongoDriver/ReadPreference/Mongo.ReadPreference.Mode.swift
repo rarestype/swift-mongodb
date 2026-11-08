@@ -9,5 +9,4 @@ extension Mongo.ReadPreference {
         case nearest
     }
 }
-extension Mongo.ReadPreference.Mode: BSONDecodable, BSONEncodable {
-}
+extension Mongo.ReadPreference.Mode: BSONDecodable, BSONEncodable {}

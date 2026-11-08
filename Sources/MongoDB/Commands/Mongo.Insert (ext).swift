@@ -1,2 +1,1 @@
-extension Mongo.Insert: Mongo.ImplicitSessionCommand, Mongo.TransactableCommand {
-}
+extension Mongo.Insert: Mongo.ImplicitSessionCommand, Mongo.TransactableCommand {}

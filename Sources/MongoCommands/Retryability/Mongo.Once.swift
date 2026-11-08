@@ -1,4 +1,3 @@
 extension Mongo {
-    @frozen public enum Once {
-    }
+    @frozen public enum Once {}
 }

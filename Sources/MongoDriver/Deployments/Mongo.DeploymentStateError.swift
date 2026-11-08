@@ -12,8 +12,7 @@ extension Mongo {
         }
     }
 }
-extension Mongo.DeploymentStateError: Equatable where Underlying: Equatable {
-}
+extension Mongo.DeploymentStateError: Equatable where Underlying: Equatable {}
 extension Mongo.DeploymentStateError: TraceableError {
     public var underlying: any Error {
         self.failure as any Error

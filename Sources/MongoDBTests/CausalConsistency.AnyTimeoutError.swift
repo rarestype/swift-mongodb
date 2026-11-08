@@ -2,8 +2,7 @@ import MongoDB
 
 extension CausalConsistency {
     struct AnyTimeoutError: Error {
-        private init() {
-        }
+        private init() {}
     }
 }
 extension CausalConsistency.AnyTimeoutError {

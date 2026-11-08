@@ -1,7 +1,6 @@
 extension Mongo {
     public struct SessionsUnsupportedError: Equatable, Error {
-        public init() {
-        }
+        public init() {}
     }
 }
 extension Mongo.SessionsUnsupportedError: CustomStringConvertible {

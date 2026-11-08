@@ -14,9 +14,11 @@ extension Mongo.Cursor {
         }
         deinit {
             guard case nil = self.cursor else {
-                fatalError("""
+                fatalError(
+                    """
                     MongoDB batch iterator misuse: deinitialized while cursor still open!
-                    """)
+                    """
+                )
             }
         }
     }

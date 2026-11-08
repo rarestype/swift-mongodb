@@ -6,5 +6,4 @@ extension Mongo {
         case indexKey
     }
 }
-extension Mongo.ProjectionMetadata: BSONDecodable, BSONEncodable {
-}
+extension Mongo.ProjectionMetadata: BSONDecodable, BSONEncodable {}

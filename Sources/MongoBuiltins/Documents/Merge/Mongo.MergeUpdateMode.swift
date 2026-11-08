@@ -8,5 +8,4 @@ extension Mongo {
         case fail
     }
 }
-extension Mongo.MergeUpdateMode: BSONDecodable, BSONEncodable {
-}
+extension Mongo.MergeUpdateMode: BSONDecodable, BSONEncodable {}

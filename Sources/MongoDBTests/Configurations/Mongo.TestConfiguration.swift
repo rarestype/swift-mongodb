@@ -17,8 +17,7 @@ extension Mongo {
 }
 extension Mongo.TestConfiguration {
     /// Does nothing.
-    func configure(options: inout Mongo.DriverOptions<Login.Authentication>) {
-    }
+    func configure(options: inout Mongo.DriverOptions<Login.Authentication>) {}
 }
 extension Mongo.TestConfiguration<Mongo.Guest> {
     /// Returns the empty tuple.

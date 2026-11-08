@@ -1,8 +1,7 @@
 import BSON
 
 extension Mongo {
-    @frozen public enum Single<Element> where Element: BSONDecodable & Sendable {
-    }
+    @frozen public enum Single<Element> where Element: BSONDecodable & Sendable {}
 }
 extension Mongo.Single: Mongo.ReadEffect {
     public typealias Tailing = Never

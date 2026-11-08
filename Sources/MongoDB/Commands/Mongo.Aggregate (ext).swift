@@ -1,5 +1,4 @@
-extension Mongo.Aggregate: Mongo.ImplicitSessionCommand, Mongo.TransactableCommand {
-}
+extension Mongo.Aggregate: Mongo.ImplicitSessionCommand, Mongo.TransactableCommand {}
 extension Mongo.Aggregate: Mongo.IterableCommand
     where   Effect.Tailing == Mongo.Tailing,
     Effect.Stride == Int,

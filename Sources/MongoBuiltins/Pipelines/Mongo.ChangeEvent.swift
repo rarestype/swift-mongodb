@@ -19,10 +19,8 @@ extension Mongo {
         }
     }
 }
-extension Mongo.ChangeEvent: Equatable where Mongo.Change<Delta>: Equatable {
-}
-extension Mongo.ChangeEvent: Sendable where Mongo.Change<Delta>: Sendable {
-}
+extension Mongo.ChangeEvent: Equatable where Mongo.Change<Delta>: Equatable {}
+extension Mongo.ChangeEvent: Sendable where Mongo.Change<Delta>: Sendable {}
 extension Mongo.ChangeEvent: BSONDocumentDecodable, BSONDecodable where
     Delta.Model.ID: BSONDecodable,
     Delta.Model: BSONDecodable {

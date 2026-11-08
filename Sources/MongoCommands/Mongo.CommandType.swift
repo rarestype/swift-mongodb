@@ -36,8 +36,7 @@ extension Mongo {
         case update
     }
 }
-extension Mongo.CommandType: BSONDecodable, BSONEncodable {
-}
+extension Mongo.CommandType: BSONDecodable, BSONEncodable {}
 extension Mongo.CommandType {
     /// Encodes the collection name as the subject of the command, or `1` if nil.
     @inlinable public func callAsFunction(

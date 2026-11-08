@@ -20,8 +20,7 @@ extension Mongo {
         }
     }
 }
-extension Mongo.CursorBatch: Equatable where Element: Equatable {
-}
+extension Mongo.CursorBatch: Equatable where Element: Equatable {}
 extension Mongo.CursorBatch {
     @inlinable public var id: Mongo.CursorIdentifier? {
         .init(rawValue: self.position)

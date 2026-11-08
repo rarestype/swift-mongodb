@@ -18,10 +18,12 @@ extension Mongo.SessionPool {
         run body: (Mongo.SessionPool) async throws -> ()
     ) async throws {
         guard case true? = database.name.first?.isUppercase else {
-            fatalError("""
+            fatalError(
+                """
                 scratch database names must start with an uppercase letter to prevent accidental
                 deletion of long-lived databases!
-                """)
+                """
+            )
         }
         //  If we already have a database with this name, drop it. This often happens if tests
         //  crash midway through.
@@ -35,10 +37,12 @@ extension Mongo.SessionPool {
         )
 
         if  before.contains(database) {
-            fatalError("""
+            fatalError(
+                """
                 failed to remove pre-existing database '\(database)', it is possible this test
                 is running in parallel with another test using the same database name!
-                """)
+                """
+            )
         }
 
         try await body(self)
@@ -55,10 +59,12 @@ extension Mongo.SessionPool {
         //  We cannot assert equivalence of `before` and `after` because `body` might set up
         //  additional databases.
         if  after.contains(database) {
-            fatalError("""
+            fatalError(
+                """
                 failed to remove temporary database '\(database)', it is possible this test
                 is running in parallel with another test using the same database name!
-                """)
+                """
+            )
         }
     }
 }

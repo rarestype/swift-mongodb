@@ -1,2 +1,1 @@
-extension Mongo.ListDatabases.NameOnly: Mongo.ImplicitSessionCommand {
-}
+extension Mongo.ListDatabases.NameOnly: Mongo.ImplicitSessionCommand {}

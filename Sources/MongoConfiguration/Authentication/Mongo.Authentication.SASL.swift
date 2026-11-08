@@ -16,5 +16,4 @@ extension Mongo.Authentication.SASL: CustomStringConvertible {
         self.rawValue
     }
 }
-extension Mongo.Authentication.SASL: BSONDecodable, BSONEncodable {
-}
+extension Mongo.Authentication.SASL: BSONDecodable, BSONEncodable {}

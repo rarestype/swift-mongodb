@@ -19,5 +19,4 @@ extension Mongo.StorageStatsDocument {
         }
     }
 }
-extension Mongo.StorageStatsDocument: ExpressibleByDictionaryLiteral {
-}
+extension Mongo.StorageStatsDocument: ExpressibleByDictionaryLiteral {}

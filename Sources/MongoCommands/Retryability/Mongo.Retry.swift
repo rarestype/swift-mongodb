@@ -1,4 +1,3 @@
 extension Mongo {
-    @frozen public enum Retry {
-    }
+    @frozen public enum Retry {}
 }

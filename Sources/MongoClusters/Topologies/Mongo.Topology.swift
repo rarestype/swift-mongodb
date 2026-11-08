@@ -6,8 +6,7 @@ extension Mongo {
         case replicated(Replicated)
     }
 }
-extension Mongo.Topology: Sendable where Owner: Sendable {
-}
+extension Mongo.Topology: Sendable where Owner: Sendable {}
 extension Mongo.Topology {
     public init(from seedlist: Mongo.Seedlist, hint: Mongo.TopologyHint?) {
         switch hint {

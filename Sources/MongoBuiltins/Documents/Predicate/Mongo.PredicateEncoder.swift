@@ -58,11 +58,12 @@ extension Mongo.PredicateEncoder {
     }
 }
 extension Mongo.PredicateEncoder {
-    @available(*, deprecated, message: """
+    @available(
+        *, deprecated, message: """
         You cannot use expressions at the top-level of a predicate document, \
         even in a '$match' stage of an aggregation pipeline.
-        """)
-    public subscript<Expression>(path: Mongo.AnyKeyPath) -> Expression?
+        """
+    ) public subscript<Expression>(path: Mongo.AnyKeyPath) -> Expression?
         where Expression: _MongoExpressionRestrictedEncodable {
         get { nil }
         set (value) {

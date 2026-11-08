@@ -4,7 +4,6 @@ extension Mongo {
     /// Wire timeouts are expensive, because the driver needs to tear down and re-establish
     /// connections after enforcing them.
     @frozen public struct WireTimeoutError: Error, Equatable {
-        @inlinable public init() {
-        }
+        @inlinable public init() {}
     }
 }

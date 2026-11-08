@@ -7,8 +7,7 @@ extension Mongo.Topology {
         }
     }
 }
-extension Mongo.Topology.Sharded: Sendable where Owner: Sendable {
-}
+extension Mongo.Topology.Sharded: Sendable where Owner: Sendable {}
 extension Mongo.Topology.Sharded: Sequence {
     public func makeIterator() -> Dictionary<
         Mongo.Host,

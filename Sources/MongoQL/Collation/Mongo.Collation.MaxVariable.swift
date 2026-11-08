@@ -9,5 +9,4 @@ extension Mongo.Collation {
         case space
     }
 }
-extension Mongo.Collation.MaxVariable: BSONDecodable, BSONEncodable {
-}
+extension Mongo.Collation.MaxVariable: BSONDecodable, BSONEncodable {}

@@ -26,7 +26,5 @@ extension Mongo {
         case _unimplemented
     }
 }
-extension Mongo.Change: Equatable where Update: Equatable, Delta.Model: Equatable {
-}
-extension Mongo.Change: Sendable where Update: Sendable, Delta.Model: Sendable {
-}
+extension Mongo.Change: Equatable where Update: Equatable, Delta.Model: Equatable {}
+extension Mongo.Change: Sendable where Update: Sendable, Delta.Model: Sendable {}

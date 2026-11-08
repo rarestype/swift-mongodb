@@ -23,5 +23,4 @@ extension Mongo.WireVersion: ExpressibleByIntegerLiteral {
         self.init(rawValue: integerLiteral)
     }
 }
-extension Mongo.WireVersion: BSONDecodable, BSONEncodable {
-}
+extension Mongo.WireVersion: BSONDecodable, BSONEncodable {}

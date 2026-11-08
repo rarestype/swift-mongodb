@@ -13,12 +13,9 @@ extension Mongo {
         }
     }
 }
-extension Mongo.Namespaced: Sendable where Name: Sendable {
-}
-extension Mongo.Namespaced: Equatable where Name: Equatable {
-}
-extension Mongo.Namespaced: Hashable where Name: Hashable {
-}
+extension Mongo.Namespaced: Sendable where Name: Sendable {}
+extension Mongo.Namespaced: Equatable where Name: Equatable {}
+extension Mongo.Namespaced: Hashable where Name: Hashable {}
 extension Mongo.Namespaced: LosslessStringConvertible {
     @inlinable public init?(_ string: some StringProtocol) {
         if  let separator: String.Index = string.firstIndex(of: "."),
@@ -38,10 +35,8 @@ extension Mongo.Namespaced: LosslessStringConvertible {
         "\(self.database).\(self.name)"
     }
 }
-extension Mongo.Namespaced: BSONDecodable, BSONStringDecodable {
-}
-extension Mongo.Namespaced: BSONEncodable, BSONStringEncodable {
-}
+extension Mongo.Namespaced: BSONDecodable, BSONStringDecodable {}
+extension Mongo.Namespaced: BSONEncodable, BSONStringEncodable {}
 
 extension Mongo.Namespaced<Mongo.Collection> {
     @inlinable public var collection: Mongo.Collection {

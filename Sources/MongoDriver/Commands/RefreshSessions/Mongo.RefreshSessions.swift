@@ -20,8 +20,7 @@ extension Mongo {
     }
 }
 @available(*, unavailable, message: "RefreshSessions cannot be run during a transaction.")
-extension Mongo.RefreshSessions: Mongo.TransactableCommand {
-}
+extension Mongo.RefreshSessions: Mongo.TransactableCommand {}
 extension Mongo.RefreshSessions: Mongo.Command, Mongo.ImplicitSessionCommand {
     /// The string `"refreshSessions"`.
     @inlinable public static var type: Mongo.CommandType { .refreshSessions }

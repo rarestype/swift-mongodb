@@ -31,5 +31,4 @@ extension Mongo.Collation {
         case identical = 5
     }
 }
-extension Mongo.Collation.Strength: BSONDecodable, BSONEncodable {
-}
+extension Mongo.Collation.Strength: BSONDecodable, BSONEncodable {}

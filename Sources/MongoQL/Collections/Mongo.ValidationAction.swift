@@ -6,5 +6,4 @@ extension Mongo {
         case warn
     }
 }
-extension Mongo.ValidationAction: BSONDecodable, BSONEncodable {
-}
+extension Mongo.ValidationAction: BSONDecodable, BSONEncodable {}

@@ -1,7 +1,6 @@
 extension Mongo {
     public struct PrettyPrint {
-        public init() {
-        }
+        public init() {}
     }
 }
 extension Mongo.PrettyPrint: Mongo.LogTarget {

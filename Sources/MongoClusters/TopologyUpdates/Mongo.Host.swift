@@ -49,7 +49,5 @@ extension Mongo.Host: CustomStringConvertible {
         "\(self.name):\(self.port)"
     }
 }
-extension Mongo.Host: BSONDecodable, BSONStringDecodable {
-}
-extension Mongo.Host: BSONEncodable, BSONStringEncodable {
-}
+extension Mongo.Host: BSONDecodable, BSONStringDecodable {}
+extension Mongo.Host: BSONEncodable, BSONStringEncodable {}

@@ -1,2 +1,1 @@
-extension Mongo.DropDatabase: Mongo.ImplicitSessionCommand {
-}
+extension Mongo.DropDatabase: Mongo.ImplicitSessionCommand {}

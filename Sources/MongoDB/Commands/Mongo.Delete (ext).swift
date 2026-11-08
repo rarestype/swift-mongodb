@@ -1,2 +1,1 @@
-extension Mongo.Delete: Mongo.ImplicitSessionCommand, Mongo.TransactableCommand {
-}
+extension Mongo.Delete: Mongo.ImplicitSessionCommand, Mongo.TransactableCommand {}

@@ -44,8 +44,7 @@ extension Mongo.Transaction {
 }
 extension Mongo.Transaction {
     @available(*, unavailable, message: "RefreshSessions cannot be run during a transaction.")
-    public func refresh() async throws {
-    }
+    public func refresh() async throws {}
 }
 extension Mongo.Transaction {
     @inlinable public func run<Command>(

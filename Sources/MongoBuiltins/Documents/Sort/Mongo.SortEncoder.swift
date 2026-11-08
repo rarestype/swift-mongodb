@@ -22,10 +22,11 @@ extension Mongo.SortEncoder: BSON.Encoder {
     @inlinable public static var frame: BSON.DocumentFrame { .document }
 }
 extension Mongo.SortEncoder {
-    @available(*, unavailable, message: """
+    @available(
+        *, unavailable, message: """
         pass the `(+)` or `(-)` operator functions to specify sort direction.
-        """)
-    @inlinable public subscript(path: CodingKey) -> Int? {
+        """
+    ) @inlinable public subscript(path: CodingKey) -> Int? {
         get { nil }
         set {     }
     }

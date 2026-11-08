@@ -28,7 +28,8 @@ import Testing
             #expect(
                 configuration.members == [
                     .init(
-                        id: 0, host: Mongo.Seedlist.replicated[0], replica: .init(
+                        id: 0, host: Mongo.Seedlist.replicated[0],
+                        replica: .init(
                             rights: .init(priority: 2.0),
                             votes: 1,
                             tags: ["priority": "high", "name": "A"]
@@ -36,7 +37,8 @@ import Testing
                     ),
 
                     .init(
-                        id: 1, host: Mongo.Seedlist.replicated[1], replica: .init(
+                        id: 1, host: Mongo.Seedlist.replicated[1],
+                        replica: .init(
                             rights: .init(priority: 1.0),
                             votes: 1,
                             tags: ["priority": "low", "name": "B"]
@@ -44,7 +46,8 @@ import Testing
                     ),
 
                     .init(
-                        id: 2, host: Mongo.Seedlist.replicated[2], replica: .init(
+                        id: 2, host: Mongo.Seedlist.replicated[2],
+                        replica: .init(
                             rights: .resident,
                             votes: 1,
                             tags: ["priority": "zero", "name": "C"]
@@ -52,7 +55,8 @@ import Testing
                     ),
 
                     .init(
-                        id: 3, host: Mongo.Seedlist.replicated[3], replica: .init(
+                        id: 3, host: Mongo.Seedlist.replicated[3],
+                        replica: .init(
                             rights: .resident,
                             votes: 1,
                             tags: ["priority": "zero", "name": "D"]
@@ -60,7 +64,8 @@ import Testing
                     ),
 
                     .init(
-                        id: 4, host: Mongo.Seedlist.replicated[4], replica: .init(
+                        id: 4, host: Mongo.Seedlist.replicated[4],
+                        replica: .init(
                             rights: .resident(.init(buildsIndexes: true, delay: .seconds(5))),
                             votes: 0,
                             tags: ["priority": "zero", "name": "H"]
@@ -70,7 +75,8 @@ import Testing
                     .init(id: 5, host: Mongo.Seedlist.replicated[5], replica: nil),
 
                     .init(
-                        id: 6, host: Mongo.Seedlist.replicated[6], replica: .init(
+                        id: 6, host: Mongo.Seedlist.replicated[6],
+                        replica: .init(
                             rights: .resident,
                             votes: 0,
                             tags: ["priority": "zero", "name": "E"]

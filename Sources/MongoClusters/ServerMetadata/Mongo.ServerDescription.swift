@@ -5,8 +5,7 @@ extension Mongo {
         case queued
     }
 }
-extension Mongo.ServerDescription: Sendable where Metadata: Sendable, Owner: Sendable {
-}
+extension Mongo.ServerDescription: Sendable where Metadata: Sendable, Owner: Sendable {}
 extension Mongo.ServerDescription {
     @inlinable public var metadata: Metadata? {
         if case .connected(let metadata, _) = self {

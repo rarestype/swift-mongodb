@@ -6,5 +6,4 @@ extension Mongo {
         case strict
     }
 }
-extension Mongo.ValidationLevel: BSONDecodable, BSONEncodable {
-}
+extension Mongo.ValidationLevel: BSONDecodable, BSONEncodable {}

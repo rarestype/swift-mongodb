@@ -19,5 +19,4 @@ extension Mongo.LatencyStatsDocument {
         }
     }
 }
-extension Mongo.LatencyStatsDocument: ExpressibleByDictionaryLiteral {
-}
+extension Mongo.LatencyStatsDocument: ExpressibleByDictionaryLiteral {}

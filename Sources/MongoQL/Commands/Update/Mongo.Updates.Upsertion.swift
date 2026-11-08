@@ -11,10 +11,8 @@ extension Mongo.Updates {
         }
     }
 }
-extension Mongo.Updates.Upsertion: Identifiable where ID: Hashable {
-}
-extension Mongo.Updates.Upsertion: Equatable where ID: Equatable {
-}
+extension Mongo.Updates.Upsertion: Identifiable where ID: Hashable {}
+extension Mongo.Updates.Upsertion: Equatable where ID: Equatable {}
 extension Mongo.Updates.Upsertion:
     BSONDocumentDecodable,
     BSONDecodable where ID: BSONDecodable {
