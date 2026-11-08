@@ -80,7 +80,8 @@ extension Mongo.HelloResponse: BSONDocumentDecodable {
                 )
                 topologyUpdate = .primary(
                     .init(
-                        replica: replica, term: .init(
+                        replica: replica,
+                        term: .init(
                             election: try bson["electionId"].decode(to: BSON.Identifier.self),
                             version: try bson["setVersion"].decode(to: Int64.self)
                         )

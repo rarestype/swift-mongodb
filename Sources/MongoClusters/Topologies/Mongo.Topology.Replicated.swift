@@ -24,8 +24,7 @@ extension Mongo.Topology {
         }
     }
 }
-extension Mongo.Topology.Replicated: Sendable where Owner: Sendable {
-}
+extension Mongo.Topology.Replicated: Sendable where Owner: Sendable {}
 extension Mongo.Topology.Replicated: Sequence {
     public func makeIterator() -> Dictionary<
         Mongo.Host,

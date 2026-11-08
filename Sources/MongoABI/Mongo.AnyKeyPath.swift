@@ -27,8 +27,7 @@ extension Mongo.AnyKeyPath: ExpressibleByStringLiteral {
 extension Mongo.AnyKeyPath: CustomStringConvertible {
     @inlinable public var description: String { "$\(self.stem)" }
 }
-extension Mongo.AnyKeyPath: BSONStringEncodable {
-}
+extension Mongo.AnyKeyPath: BSONStringEncodable {}
 extension Mongo.AnyKeyPath {
     /// Creates a key path by joining two key paths with a `.` character.
     @inlinable public static func / (self: Self, next: Self) -> Self {

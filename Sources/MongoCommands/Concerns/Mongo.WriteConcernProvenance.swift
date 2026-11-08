@@ -8,5 +8,4 @@ extension Mongo {
         case implicitDefault
     }
 }
-extension Mongo.WriteConcernProvenance: BSONDecodable, BSONEncodable {
-}
+extension Mongo.WriteConcernProvenance: BSONDecodable, BSONEncodable {}

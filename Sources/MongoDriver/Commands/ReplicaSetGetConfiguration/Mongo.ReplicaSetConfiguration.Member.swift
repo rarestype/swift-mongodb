@@ -59,7 +59,8 @@ extension Mongo.ReplicaSetConfiguration.Member: BSONDecodable, BSONDocumentDecod
         }
 
         self.init(
-            id: id, host: host, replica: .init(
+            id: id, host: host,
+            replica: .init(
                 rights: rights,
                 votes: try bson[.votes].decode(to: Int.self),
                 tags: try bson[.tags].decode(to: OrderedDictionary<BSON.Key, String>.self)

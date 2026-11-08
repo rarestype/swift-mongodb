@@ -4,7 +4,6 @@ extension Mongo {
     /// This error indicates that the command was never sent over the wire to begin with, in
     /// contrast to `Mongo.WireTimeoutError`.
     @frozen public struct DriverTimeoutError: Error, Equatable, Sendable {
-        @inlinable public init() {
-        }
+        @inlinable public init() {}
     }
 }

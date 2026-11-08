@@ -30,8 +30,7 @@ import Testing
             //  We should be able to abort an empty transaction by throwing an error.
             let result: Mongo.TransactionResult<Void> = await session.withSnapshotTransaction(
                 writeConcern: .majority
-            ) {
-                (_: Mongo.Transaction) in
+            ) { (_: Mongo.Transaction) in
                 throw CancellationError.init()
             }
             //  We should be able to observe the transaction API return a 'cancelled'
@@ -58,8 +57,7 @@ import Testing
             //  We should be able to abort a non-empty transaction by throwing an error.
             let result: Mongo.TransactionResult<Void> = await session.withSnapshotTransaction(
                 writeConcern: .majority
-            ) {
-                (transaction: Mongo.Transaction) in
+            ) { (transaction: Mongo.Transaction) in
                 //  We should be able to observe a precondition time associated with
                 //  this transaction, because we have used its underlying session
                 //  before.
@@ -140,8 +138,7 @@ import Testing
             //  the closure argument.
             let result: Mongo.TransactionResult<Void> = await session.withSnapshotTransaction(
                 writeConcern: .majority
-            ) {
-                (_: Mongo.Transaction) in
+            ) { (_: Mongo.Transaction) in
             }
             //  We should be able to observe the transaction API return a 'cancelled'
             //  transaction result.
@@ -159,8 +156,7 @@ import Testing
             //  the closure argument.
             let result: Mongo.TransactionResult<Void> = await session.withSnapshotTransaction(
                 writeConcern: .majority
-            ) {
-                (transaction: Mongo.Transaction) in
+            ) { (transaction: Mongo.Transaction) in
 
                 do {
                     let response: Mongo.InsertResponse = try await transaction.run(

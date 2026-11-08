@@ -25,5 +25,4 @@ extension Mongo.Variable: CustomStringConvertible {
     /// Returns this variable’s ``name`` prefixed with two dollar signs.
     @inlinable public var description: String { "$$\(self.name)" }
 }
-extension Mongo.Variable: BSONStringEncodable {
-}
+extension Mongo.Variable: BSONStringEncodable {}

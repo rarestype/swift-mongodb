@@ -1,2 +1,1 @@
-extension Mongo.Database: Mongo.DatabaseType {
-}
+extension Mongo.Database: Mongo.DatabaseType {}

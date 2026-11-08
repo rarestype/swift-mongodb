@@ -1,6 +1,5 @@
 import MongoCommands
 
 extension Mongo {
-    public protocol TransactableCommand<Response>: Command {
-    }
+    public protocol TransactableCommand<Response>: Command {}
 }

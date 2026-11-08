@@ -7,5 +7,4 @@ extension Mongo {
         case allPlansExecution
     }
 }
-extension Mongo.ExplainMode: BSONDecodable, BSONEncodable {
-}
+extension Mongo.ExplainMode: BSONDecodable, BSONEncodable {}

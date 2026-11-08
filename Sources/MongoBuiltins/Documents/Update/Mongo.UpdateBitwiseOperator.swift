@@ -7,5 +7,4 @@ extension Mongo {
         case xor
     }
 }
-extension Mongo.UpdateBitwiseOperator: BSONDecodable, BSONEncodable {
-}
+extension Mongo.UpdateBitwiseOperator: BSONDecodable, BSONEncodable {}

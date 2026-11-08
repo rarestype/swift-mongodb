@@ -12,5 +12,4 @@ extension Mongo.Collation {
         case shifted
     }
 }
-extension Mongo.Collation.Alternate: BSONDecodable, BSONEncodable {
-}
+extension Mongo.Collation.Alternate: BSONDecodable, BSONEncodable {}

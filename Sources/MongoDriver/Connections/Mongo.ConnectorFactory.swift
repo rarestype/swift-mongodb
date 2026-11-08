@@ -48,8 +48,7 @@ extension Mongo.ConnectorFactory {
                 ),
                 value: 1
             )
-            .channelInitializer {
-                (channel: any Channel) in
+            .channelInitializer { (channel: any Channel) in
 
                 do {
                     let parser: Mongo.WireMessageParser = .init()

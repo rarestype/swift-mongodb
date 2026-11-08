@@ -6,5 +6,4 @@ extension Mongo {
         case last = 1
     }
 }
-extension Mongo.UpdatePosition: BSONDecodable, BSONEncodable {
-}
+extension Mongo.UpdatePosition: BSONDecodable, BSONEncodable {}

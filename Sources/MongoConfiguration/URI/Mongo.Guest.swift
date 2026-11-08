@@ -1,7 +1,6 @@
 extension Mongo {
     @frozen public struct Guest: Sendable {
-        @inlinable public init(_: Never?) {
-        }
+        @inlinable public init(_: Never?) {}
     }
 }
 extension Mongo.Guest: Mongo.LoginMode {

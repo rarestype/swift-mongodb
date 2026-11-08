@@ -27,7 +27,8 @@ extension Mongo.RenameCollection {
         writeConcern: WriteConcern? = nil
     ) {
         self.init(
-            writeConcern: writeConcern, fields: Self.type(some: old) {
+            writeConcern: writeConcern,
+            fields: Self.type(some: old) {
                 $0["to"] = new
             }
         )

@@ -1,2 +1,1 @@
-extension Mongo.FsyncUnlock: Mongo.ImplicitSessionCommand {
-}
+extension Mongo.FsyncUnlock: Mongo.ImplicitSessionCommand {}

@@ -5,5 +5,4 @@ extension Mongo {
         case textScore
     }
 }
-extension Mongo.SortMetadata: BSONDecodable, BSONEncodable {
-}
+extension Mongo.SortMetadata: BSONDecodable, BSONEncodable {}

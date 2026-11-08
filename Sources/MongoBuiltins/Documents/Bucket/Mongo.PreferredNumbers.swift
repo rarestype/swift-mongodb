@@ -20,5 +20,4 @@ extension Mongo {
         case r80 = "R80"
     }
 }
-extension Mongo.PreferredNumbers: BSONDecodable, BSONEncodable {
-}
+extension Mongo.PreferredNumbers: BSONDecodable, BSONEncodable {}

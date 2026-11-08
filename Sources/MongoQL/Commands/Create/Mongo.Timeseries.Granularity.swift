@@ -7,5 +7,4 @@ extension Mongo.Timeseries {
         case hours
     }
 }
-extension Mongo.Timeseries.Granularity: BSONDecodable, BSONEncodable {
-}
+extension Mongo.Timeseries.Granularity: BSONDecodable, BSONEncodable {}

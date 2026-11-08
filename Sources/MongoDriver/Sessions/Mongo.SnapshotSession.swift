@@ -39,5 +39,4 @@ extension Mongo {
     }
 }
 @available(*, unavailable, message: "sessions have reference semantics")
-extension Mongo.SnapshotSession: Sendable {
-}
+extension Mongo.SnapshotSession: Sendable {}

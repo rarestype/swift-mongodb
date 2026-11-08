@@ -87,8 +87,7 @@ extension Mongo.Command where WriteConcern == Never {
 
 extension Mongo.Command<Void> {
     /// Does nothing, ignoring the supplied decoding container.
-    @inlinable public static func decode(reply _: BSON.DocumentDecoder<BSON.Key>) {
-    }
+    @inlinable public static func decode(reply _: BSON.DocumentDecoder<BSON.Key>) {}
 }
 extension Mongo.Command where Response: BSONDocumentDecodable<BSON.Key> {
     /// Delegates to the ``Response`` type’s ``BSONDocumentDecodable`` conformance.

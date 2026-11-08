@@ -1,4 +1,3 @@
 extension Mongo {
-    public protocol PipelineEncodable: PipelineStreamable {
-    }
+    public protocol PipelineEncodable: PipelineStreamable {}
 }

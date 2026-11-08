@@ -160,10 +160,11 @@ extension Mongo.UpdateFieldsEncoder<Mongo.UpdateEncoder.Unset> {
         }
     }
 
-    @available(*, deprecated, message: """
+    @available(
+        *, deprecated, message: """
         This operator does not respect nil assignment, use the boolean subscript instead
-        """)
-    @inlinable public subscript(path: Mongo.AnyKeyPath) -> Void? {
+        """
+    ) @inlinable public subscript(path: Mongo.AnyKeyPath) -> Void? {
         get {
             nil
         }

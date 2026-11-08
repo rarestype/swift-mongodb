@@ -17,8 +17,7 @@ extension Mongo.Server {
         self.pool.host
     }
 }
-extension Mongo.Server: Sendable where Metadata: Sendable {
-}
+extension Mongo.Server: Sendable where Metadata: Sendable {}
 extension Mongo.Server<Mongo.ReplicaQuality> {
     /// Computes the quality of a **primary** replica.
     ///

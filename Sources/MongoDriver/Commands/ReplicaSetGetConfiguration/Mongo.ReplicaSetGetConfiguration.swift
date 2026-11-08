@@ -4,8 +4,7 @@ import MongoCommands
 
 extension Mongo {
     public struct ReplicaSetGetConfiguration: Sendable {
-        public init() {
-        }
+        public init() {}
     }
 }
 extension Mongo.ReplicaSetGetConfiguration: Mongo.Command {
@@ -27,5 +26,4 @@ extension Mongo.ReplicaSetGetConfiguration: Mongo.Command {
         Self.type(nil)
     }
 }
-extension Mongo.ReplicaSetGetConfiguration: Mongo.ImplicitSessionCommand {
-}
+extension Mongo.ReplicaSetGetConfiguration: Mongo.ImplicitSessionCommand {}

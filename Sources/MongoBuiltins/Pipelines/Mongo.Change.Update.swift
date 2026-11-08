@@ -36,11 +36,9 @@ extension Mongo.Change.Update where Delta.Model.ID: BSONDecodable {
     }
 }
 extension Mongo.Change.Update: Equatable
-    where Delta: Equatable, Delta.Model.ID: Equatable, Delta.Model.CodingKey: Equatable {
-}
+    where Delta: Equatable, Delta.Model.ID: Equatable, Delta.Model.CodingKey: Equatable {}
 extension Mongo.Change.Update: Sendable
-    where Delta: Sendable, Delta.Model.ID: Sendable, Delta.Model.CodingKey: Sendable {
-}
+    where Delta: Sendable, Delta.Model.ID: Sendable, Delta.Model.CodingKey: Sendable {}
 extension Mongo.Change.Update {
     @inlinable var updateDescription: Mongo.Change<Delta>.UpdateDescription {
         .init(

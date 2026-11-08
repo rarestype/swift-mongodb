@@ -1,4 +1,3 @@
 import BSON
 
-extension BSON.Timestamp: Mongo.Instant {
-}
+extension BSON.Timestamp: Mongo.Instant {}

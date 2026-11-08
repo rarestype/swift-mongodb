@@ -56,8 +56,7 @@ import Testing
 
         //  We cannot use #expect here, it crashes the compiler, and sourcekit-lsp :(
         do {
-            try await bootstrap.withSessionPool {
-                (pool: Mongo.SessionPool) in
+            try await bootstrap.withSessionPool { (pool: Mongo.SessionPool) in
 
                 async let _: Void = {
                     let session: Mongo.Session = try await .init(from: pool)

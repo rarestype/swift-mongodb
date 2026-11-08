@@ -2,8 +2,7 @@ import BSON
 
 extension Mongo {
     public struct FsyncUnlock: Sendable {
-        public init() {
-        }
+        public init() {}
     }
 }
 extension Mongo.FsyncUnlock: Mongo.Command {

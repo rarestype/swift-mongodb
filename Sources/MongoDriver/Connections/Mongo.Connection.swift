@@ -27,8 +27,7 @@ extension Mongo {
     }
 }
 @available(*, unavailable, message: "connections are mutable move-only types.")
-extension Mongo.Connection: Sendable {
-}
+extension Mongo.Connection: Sendable {}
 extension Mongo.Connection {
     public var id: UInt {
         self.allocation.id

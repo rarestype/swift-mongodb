@@ -25,5 +25,4 @@ extension Mongo.KillCursors: Mongo.Command {
         }
     }
 }
-extension Mongo.KillCursors: Mongo.TransactableCommand {
-}
+extension Mongo.KillCursors: Mongo.TransactableCommand {}

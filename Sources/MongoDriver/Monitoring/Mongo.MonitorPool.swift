@@ -52,7 +52,8 @@ extension Mongo.MonitorPool {
         await withTaskCancellationHandler {
             await withCheckedContinuation {
                 self.topology = .init(
-                    interval: interval, topology: .init(
+                    interval: interval,
+                    topology: .init(
                         from: seedlist,
                         hint: topology
                     )
@@ -146,8 +147,7 @@ extension Mongo.MonitorPool {
             fatalError("unreachable")
         }
 
-        return await withTaskGroup(of: Void.self) {
-            (tasks: inout TaskGroup<Void>) in
+        return await withTaskGroup(of: Void.self) { (tasks: inout TaskGroup<Void>) in
 
             let exitHandle: AsyncStream<Mongo.MonitorService>.Continuation
             let exitEvents: AsyncStream<Mongo.MonitorService>

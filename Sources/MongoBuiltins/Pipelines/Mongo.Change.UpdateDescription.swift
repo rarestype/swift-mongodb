@@ -22,8 +22,7 @@ extension Mongo.Change {
     }
 }
 extension Mongo.Change.UpdateDescription: Sendable
-    where Delta: Sendable, Delta.Model.CodingKey: Sendable {
-}
+    where Delta: Sendable, Delta.Model.CodingKey: Sendable {}
 extension Mongo.Change.UpdateDescription: BSONDecodable, BSONDocumentDecodable {
     @frozen @usableFromInline enum CodingKey: String, Hashable, Sendable {
         case updatedFields

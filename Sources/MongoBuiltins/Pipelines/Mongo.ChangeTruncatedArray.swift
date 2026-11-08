@@ -11,10 +11,8 @@ extension Mongo {
         }
     }
 }
-extension Mongo.ChangeTruncatedArray: Sendable where Field: Sendable {
-}
-extension Mongo.ChangeTruncatedArray: Equatable where Field: Equatable {
-}
+extension Mongo.ChangeTruncatedArray: Sendable where Field: Sendable {}
+extension Mongo.ChangeTruncatedArray: Equatable where Field: Equatable {}
 extension Mongo.ChangeTruncatedArray: BSONDecodable, BSONDocumentDecodable
     where Field: BSONDecodable {
     @frozen public enum CodingKey: String, Hashable, Sendable {

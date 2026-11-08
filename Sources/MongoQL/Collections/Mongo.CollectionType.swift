@@ -7,5 +7,4 @@ extension Mongo {
         case view
     }
 }
-extension Mongo.CollectionType: BSONDecodable, BSONEncodable {
-}
+extension Mongo.CollectionType: BSONDecodable, BSONEncodable {}

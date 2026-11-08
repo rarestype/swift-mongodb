@@ -14,5 +14,4 @@ extension Mongo.ChangeEventIdentifier: Equatable {
         a.rawValue.bytes == b.rawValue.bytes
     }
 }
-extension Mongo.ChangeEventIdentifier: BSONDecodable, BSONEncodable {
-}
+extension Mongo.ChangeEventIdentifier: BSONDecodable, BSONEncodable {}

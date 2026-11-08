@@ -19,8 +19,7 @@ extension Mongo.ServerError.Code: CustomStringConvertible {
         self.rawValue.description
     }
 }
-extension Mongo.ServerError.Code: BSONDecodable, BSONEncodable {
-}
+extension Mongo.ServerError.Code: BSONDecodable, BSONEncodable {}
 //  Catalogued from the reference at:
 //  https://github.com/mongodb/mongo/blob/master/src/mongo/base/error_codes.yml
 extension Mongo.ServerError.Code {

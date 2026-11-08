@@ -28,8 +28,7 @@ extension Mongo {
         }
     }
 }
-extension Mongo.UpdateResponse: Equatable where ID: Equatable {
-}
+extension Mongo.UpdateResponse: Equatable where ID: Equatable {}
 extension Mongo.UpdateResponse {
     /// Throws a ``WriteConcernError`` if one took place, or the first ``WriteError`` that took
     /// place if no write concern error took place.

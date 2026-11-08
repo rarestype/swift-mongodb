@@ -13,8 +13,7 @@ extension SCRAM.ClientResponse {
         }
     }
 }
-extension SCRAM.ClientResponse.Keys: Sendable where Hash: Sendable {
-}
+extension SCRAM.ClientResponse.Keys: Sendable where Hash: Sendable {}
 extension SCRAM.ClientResponse.Keys {
     @inlinable public init(server: Hash, client: Hash) {
         self.init(server: server, client: client, stored: .init(hashing: client))

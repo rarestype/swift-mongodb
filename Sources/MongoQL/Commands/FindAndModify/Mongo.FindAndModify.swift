@@ -40,7 +40,8 @@ extension Mongo.FindAndModify {
         returning phase: Effect.Phase
     ) {
         self.init(
-            writeConcern: writeConcern, fields: Self.type(collection) {
+            writeConcern: writeConcern,
+            fields: Self.type(collection) {
                 $0[Effect.Phase.field] = phase
                 $0["upsert"] = Effect.upsert
             }

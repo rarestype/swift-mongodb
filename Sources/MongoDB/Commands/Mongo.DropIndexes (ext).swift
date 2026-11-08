@@ -1,2 +1,1 @@
-extension Mongo.DropIndexes: Mongo.ImplicitSessionCommand, Mongo.TransactableCommand {
-}
+extension Mongo.DropIndexes: Mongo.ImplicitSessionCommand, Mongo.TransactableCommand {}

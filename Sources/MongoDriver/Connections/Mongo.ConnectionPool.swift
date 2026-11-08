@@ -155,7 +155,8 @@ extension Mongo.ConnectionPool {
         //  will throw ``CancellationError`` if request succeeds
         try await Task.sleep(until: deadline, clock: .continuous)
         self.allocations.fail(
-            request: id, throwing: Mongo.ConnectionPoolTimeoutError.init(
+            request: id,
+            throwing: Mongo.ConnectionPoolTimeoutError.init(
                 host: self.host
             )
         )

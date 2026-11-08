@@ -14,8 +14,7 @@ extension Mongo {
         }
     }
 }
-extension Mongo.CursorIdentifier: BSONDecodable, BSONEncodable {
-}
+extension Mongo.CursorIdentifier: BSONDecodable, BSONEncodable {}
 extension Mongo.CursorIdentifier: CustomStringConvertible {
     public var description: String {
         self.rawValue.description

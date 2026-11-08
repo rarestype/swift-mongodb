@@ -55,8 +55,9 @@ import Testing
                 by: midpoint
             )
 
-            try await withThrowingTaskGroup(of: Void.self) {
-                (tasks: inout ThrowingTaskGroup<Void, any Error>) in
+            try await withThrowingTaskGroup(
+                of: Void.self
+            ) { (tasks: inout ThrowingTaskGroup<Void, any Error>) in
 
                 for _: Int in 0 ..< 500 {
                     tasks.addTask {
@@ -72,8 +73,7 @@ import Testing
                         }
                     }
                 }
-                for try await _: Void in tasks {
-                }
+                for try await _: Void in tasks {}
             }
 
             #expect(await pool.count == bootstrap.connectionPoolSize.upperBound)

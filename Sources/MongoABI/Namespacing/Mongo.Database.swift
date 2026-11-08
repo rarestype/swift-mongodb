@@ -29,7 +29,5 @@ extension Mongo.Database: LosslessStringConvertible {
         self.name
     }
 }
-extension Mongo.Database: BSONDecodable, BSONStringDecodable {
-}
-extension Mongo.Database: BSONEncodable, BSONStringEncodable {
-}
+extension Mongo.Database: BSONDecodable, BSONStringDecodable {}
+extension Mongo.Database: BSONEncodable, BSONStringEncodable {}

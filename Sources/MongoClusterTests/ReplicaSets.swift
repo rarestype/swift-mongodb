@@ -42,7 +42,8 @@ import Testing
         let update: Mongo.TopologyUpdateResult = topology.combine(
             update: .primary(
                 .init(
-                    replica: filler, term: .init(
+                    replica: filler,
+                    term: .init(
                         election: .init(0, 0, 0),
                         version: 1
                     )
@@ -78,7 +79,8 @@ import Testing
         let update: Mongo.TopologyUpdateResult = topology.combine(
             update: .primary(
                 .init(
-                    replica: filler, term: .init(
+                    replica: filler,
+                    term: .init(
                         election: .init(0, 0, 0),
                         version: 1
                     )
@@ -114,7 +116,8 @@ import Testing
         let update: Mongo.TopologyUpdateResult = topology.combine(
             update: .primary(
                 .init(
-                    replica: filler, term: .init(
+                    replica: filler,
+                    term: .init(
                         election: .init(0, 0, 0),
                         version: 2
                     )
@@ -132,7 +135,8 @@ import Testing
         let ghosted: Mongo.TopologyUpdateResult = topology.combine(
             update: .primary(
                 .init(
-                    replica: filler, term: .init(
+                    replica: filler,
+                    term: .init(
                         election: .init(0, 0, 0),
                         version: 1
                     )

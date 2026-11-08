@@ -2,8 +2,7 @@ import BSON
 import BSONReflection
 
 extension Mongo {
-    @frozen public enum ExplainOnly {
-    }
+    @frozen public enum ExplainOnly {}
 }
 extension Mongo.ExplainOnly: Mongo.ReadEffect {
     public typealias Tailing = Never

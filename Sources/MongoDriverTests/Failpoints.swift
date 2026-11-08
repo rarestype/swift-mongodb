@@ -5,8 +5,7 @@ import Testing
 @Suite struct Failpoints {
     @Test(arguments: [.standaloneDefault, .replicatedDefault] as [Mongo.DriverBootstrap])
     static func failpoints(_ bootstrap: Mongo.DriverBootstrap) async throws {
-        try await bootstrap.withSessionPool {
-            (pool: Mongo.SessionPool) in
+        try await bootstrap.withSessionPool { (pool: Mongo.SessionPool) in
 
             try await pool.run(
                 command: Mongo.ConfigureFailpoint<Mongo.FailCommand>.once(

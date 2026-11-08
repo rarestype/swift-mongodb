@@ -1,5 +1,4 @@
-extension Mongo.Find: Mongo.ImplicitSessionCommand, Mongo.TransactableCommand {
-}
+extension Mongo.Find: Mongo.ImplicitSessionCommand, Mongo.TransactableCommand {}
 extension Mongo.Find: Mongo.IterableCommand
     where   Effect.Tailing == Mongo.Tailing,
     Effect.Stride == Int,

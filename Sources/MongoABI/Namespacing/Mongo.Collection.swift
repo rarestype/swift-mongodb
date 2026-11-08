@@ -19,7 +19,5 @@ extension Mongo.Collection: LosslessStringConvertible {
         self.name
     }
 }
-extension Mongo.Collection: BSONDecodable, BSONStringDecodable {
-}
-extension Mongo.Collection: BSONEncodable, BSONStringEncodable {
-}
+extension Mongo.Collection: BSONDecodable, BSONStringDecodable {}
+extension Mongo.Collection: BSONEncodable, BSONStringEncodable {}

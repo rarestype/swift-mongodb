@@ -12,10 +12,8 @@ extension Mongo {
         }
     }
 }
-extension Mongo.IdentityDocument: Identifiable where ID: Hashable {
-}
-extension Mongo.IdentityDocument: Sendable where ID: Sendable {
-}
+extension Mongo.IdentityDocument: Identifiable where ID: Hashable {}
+extension Mongo.IdentityDocument: Sendable where ID: Sendable {}
 extension Mongo.IdentityDocument: Mongo.MasterCodingModel {
     @frozen public enum CodingKey: String, Sendable {
         case id = "_id"

@@ -15,10 +15,12 @@ extension Mongo {
 
         deinit {
             if  case .awaiting(_?) = self.state {
-                fatalError("""
+                fatalError(
+                    """
                     unreachable (deinitialized channel handler while a continuation is still \
                     awaiting)
-                    """)
+                    """
+                )
             }
         }
     }

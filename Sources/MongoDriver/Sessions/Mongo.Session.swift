@@ -143,8 +143,7 @@ extension Mongo.Session {
     }
 }
 @available(*, unavailable, message: "sessions have reference semantics")
-extension Mongo.Session: Sendable {
-}
+extension Mongo.Session: Sendable {}
 extension Mongo.Session {
     /// Runs a command against the specified database, on a server selected according
     /// to the specified read preference.
@@ -273,8 +272,7 @@ extension Mongo.Session {
                 selecting: preference,
                 among: self.deployment,
                 until: deadline
-            ) {
-                (connections: Mongo.ConnectionPool, deadlines: Mongo.Deadlines) in
+            ) { (connections: Mongo.ConnectionPool, deadlines: Mongo.Deadlines) in
 
                 try await self.begin(
                     query: query, against: database,
@@ -297,8 +295,7 @@ extension Mongo.Session {
                 selecting: preference,
                 among: self.deployment,
                 until: deadline
-            ) {
-                (connections: Mongo.ConnectionPool, deadlines: Mongo.Deadlines) in
+            ) { (connections: Mongo.ConnectionPool, deadlines: Mongo.Deadlines) in
 
                 try await self.begin(
                     query: query, against: database,

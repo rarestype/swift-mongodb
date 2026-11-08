@@ -16,5 +16,4 @@ extension Mongo {
 extension Mongo.PredicateDocument: Mongo.EncodableDocument {
     public typealias Encoder = Mongo.PredicateEncoder
 }
-extension Mongo.PredicateDocument: ExpressibleByDictionaryLiteral {
-}
+extension Mongo.PredicateDocument: ExpressibleByDictionaryLiteral {}

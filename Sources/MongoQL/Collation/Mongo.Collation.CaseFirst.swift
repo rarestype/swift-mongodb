@@ -6,5 +6,4 @@ extension Mongo.Collation {
         case upper
     }
 }
-extension Mongo.Collation.CaseFirst: BSONDecodable, BSONEncodable {
-}
+extension Mongo.Collation.CaseFirst: BSONDecodable, BSONEncodable {}

@@ -3,8 +3,7 @@ import NIOCore
 import NIOPosix
 
 extension Mongo.DNS {
-    public enum Connection: Sendable {
-    }
+    public enum Connection: Sendable {}
 }
 extension Mongo.DNS.Connection: Resolver {
     public func initiateAQuery(host: String, port: Int) -> EventLoopFuture<[SocketAddress]> {
