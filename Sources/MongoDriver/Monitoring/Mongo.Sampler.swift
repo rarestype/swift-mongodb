@@ -31,8 +31,9 @@ extension Mongo.Sampler {
                 let deadline: ContinuousClock.Instant = .now.advanced(by: interval)
 
                 let sampleLatency: Duration = try await self.connection.sample(by: deadline)
-                let sample: Double = 1e-9 * Double.init(sampleLatency.components.attoseconds) +
-                1e+9 * Double.init(sampleLatency.components.seconds)
+                let sample: Double =
+                    1e-9 * Double.init(sampleLatency.components.attoseconds) +
+                    1e+9 * Double.init(sampleLatency.components.seconds)
 
                 metric = alpha * sample + (1 - alpha) * metric
 
