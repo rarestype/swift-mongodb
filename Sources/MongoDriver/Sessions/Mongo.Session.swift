@@ -522,8 +522,9 @@ extension Mongo.Session {
         preference: Mongo.ReadPreference,
         autocommit: Bool
     ) -> Mongo.SessionLabels {
-        let writeOptions: Mongo.WriteConcern.Options? =
-        writeConcern.map(Mongo.WriteConcern.Options.init(_:))
+        let writeOptions: Mongo.WriteConcern.Options? = writeConcern.map(
+            Mongo.WriteConcern.Options.init(_:)
+        )
         let readOptions: Mongo.ReadConcern.Options?
         let transaction: Mongo.TransactionLabels?
         switch self.transaction.phase {

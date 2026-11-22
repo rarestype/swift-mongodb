@@ -33,8 +33,7 @@ extension Mongo.UpdateResponse {
     /// Throws a ``WriteConcernError`` if one took place, or the first ``WriteError`` that took
     /// place if no write concern error took place.
     @inlinable public func updates() throws -> Mongo.Updates<ID> {
-        if  let error: any Error =
-            self.writeConcernError ??
+        if  let error: any Error = self.writeConcernError ??
             self.writeErrors.first {
             throw error
         } else {
