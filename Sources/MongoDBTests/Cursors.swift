@@ -141,8 +141,7 @@ import Testing
                 //  We should be using a session that is causally-consistent with the
                 //  insertion operation at the beginning of this test.
                 let session: Mongo.Session = try await initializer.fork()
-                let cursor: Mongo.CursorIdentifier? =
-                try await session.run(
+                let cursor: Mongo.CursorIdentifier? = try await session.run(
                     command: Mongo.Find<Mongo.Cursor<Record<Int64>>>.init(
                         self.collection,
                         stride: 10
