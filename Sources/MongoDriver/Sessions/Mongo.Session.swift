@@ -324,8 +324,9 @@ extension Mongo.Session {
 
         return .create(
             preference: preference,
-            lifecycle: query.tailing.map { .iterable($0.timeout) } ??
-            .expires(deadlines.operation),
+            lifecycle:
+                query.tailing.map { .iterable($0.timeout) } ??
+                .expires(deadlines.operation),
             timeout: self.deployment.timeout,
             initial: try await self.run(
                 command: query,
